@@ -13,12 +13,12 @@
 
   <meta
     name="description"
-    content="Fast Feed is a Vidya ERP companion for feedback automation, marks archive, attendance and alerts."
+    content="Fast Feed is a student-made Vidya ERP companion for feedback automation, marks archive, attendance and useful alerts."
   >
 
   <meta
     name="keywords"
-    content="Fast Feed, Vidya ERP, Vidya Academy, attendance, marks, feedback automation"
+    content="Fast Feed, Vidya ERP, Vidya Academy, Vidya Academy of Science and Technology, attendance, marks, feedback automation"
   >
 
   <meta
@@ -28,11 +28,20 @@
   >
 
   <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  >
+
+  <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Material+Icons+Round&display=swap"
     rel="stylesheet"
   >
 
   <style>
+
+    /* =========================================================
+       THEME
+       ========================================================= */
 
     :root {
       --primary: #2563eb;
@@ -41,6 +50,7 @@
 
       --background: #f7f9fc;
       --surface: #ffffff;
+      --surface-soft: #f3f5f8;
       --surface-strong: #e9edf3;
 
       --text: #121722;
@@ -60,6 +70,7 @@
 
       --background: #101217;
       --surface: #191c21;
+      --surface-soft: #1d2026;
       --surface-strong: #262a31;
 
       --text: #f3f5fa;
@@ -71,6 +82,11 @@
       --shadow:
         0 18px 46px rgba(0, 0, 0, 0.30);
     }
+
+
+    /* =========================================================
+       BASE
+       ========================================================= */
 
     * {
       box-sizing: border-box;
@@ -137,7 +153,10 @@
       margin: 0 auto;
     }
 
-    /* NAVBAR */
+
+    /* =========================================================
+       NAVIGATION
+       ========================================================= */
 
     .navbar {
       position: sticky;
@@ -200,11 +219,11 @@
     .nav-right {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .vidya-nav {
-      height: 35px;
+      height: 37px;
       width: auto;
 
       object-fit: contain;
@@ -227,7 +246,9 @@
 
       cursor: pointer;
 
-      transition: transform 0.18s ease;
+      transition:
+        transform 0.18s ease,
+        background 0.25s ease;
     }
 
     .theme-button:hover {
@@ -238,21 +259,40 @@
       font-size: 23px;
     }
 
-    /* HERO */
+
+    /* =========================================================
+       HERO
+       ========================================================= */
 
     .hero {
-      padding: 80px 0 62px;
+      padding: 76px 0 58px;
 
       text-align: center;
     }
 
+    .app-icon-box {
+      width: 158px;
+      height: 158px;
+
+      margin: 0 auto 25px;
+
+      display: grid;
+      place-items: center;
+
+      border-radius: 34px;
+
+      background: var(--surface);
+
+      border: 1px solid var(--border);
+
+      box-shadow: var(--shadow);
+    }
+
     .hero-logo {
-      width: 175px;
-      height: 175px;
+      width: 125px;
+      height: 125px;
 
       object-fit: contain;
-
-      margin: 0 auto 27px;
     }
 
     .hero h1 {
@@ -264,7 +304,7 @@
 
       letter-spacing: -2.4px;
 
-      margin-bottom: 15px;
+      margin-bottom: 14px;
     }
 
     .hero-tagline {
@@ -272,9 +312,46 @@
 
       color: var(--muted);
 
-      font-weight: 700;
+      font-weight: 750;
 
-      margin-bottom: 31px;
+      margin-bottom: 12px;
+    }
+
+    .hero-description {
+      width: min(650px, 100%);
+
+      margin: 0 auto 30px;
+
+      color: var(--muted);
+
+      font-size: 16px;
+
+      line-height: 1.65;
+    }
+
+    .hero-badges {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+
+      gap: 8px;
+
+      margin-bottom: 25px;
+    }
+
+    .mini-badge {
+      padding: 8px 12px;
+
+      border-radius: 999px;
+
+      background: var(--surface);
+      border: 1px solid var(--border);
+
+      color: var(--muted);
+
+      font-size: 13px;
+      font-weight: 700;
     }
 
     .download-button {
@@ -324,7 +401,10 @@
       font-size: 14px;
     }
 
-    /* SECTIONS */
+
+    /* =========================================================
+       SECTIONS
+       ========================================================= */
 
     section {
       padding: 42px 0;
@@ -337,6 +417,8 @@
     }
 
     .section-heading h2 {
+      margin-bottom: 8px;
+
       font-size: clamp(29px, 4vw, 39px);
 
       font-weight: 900;
@@ -344,7 +426,16 @@
       letter-spacing: -0.8px;
     }
 
-    /* FEATURES */
+    .section-heading p {
+      color: var(--muted);
+
+      line-height: 1.55;
+    }
+
+
+    /* =========================================================
+       FEATURES
+       ========================================================= */
 
     .features {
       display: grid;
@@ -396,7 +487,6 @@
       margin-bottom: 9px;
 
       font-size: 19px;
-
       font-weight: 850;
     }
 
@@ -408,7 +498,10 @@
       line-height: 1.6;
     }
 
-    /* SCREENSHOTS */
+
+    /* =========================================================
+       SCREENSHOTS
+       ========================================================= */
 
     .screenshots {
       display: grid;
@@ -447,12 +540,12 @@
     .screenshot img {
       width: 100%;
 
+      border-radius: 17px;
+
       aspect-ratio: 9 / 16;
 
       object-fit: cover;
       object-position: top;
-
-      border-radius: 17px;
     }
 
     .screen-name {
@@ -467,7 +560,10 @@
       font-weight: 750;
     }
 
-    /* INFO */
+
+    /* =========================================================
+       INFO
+       ========================================================= */
 
     .info-grid {
       display: grid;
@@ -521,7 +617,10 @@
       color: var(--text);
     }
 
-    /* BOTTOM DOWNLOAD */
+
+    /* =========================================================
+       BOTTOM DOWNLOAD
+       ========================================================= */
 
     .bottom-download {
       padding: 55px 0 50px;
@@ -530,14 +629,23 @@
     }
 
     .bottom-download h2 {
-      margin-bottom: 22px;
+      margin-bottom: 10px;
 
       font-size: clamp(28px, 4vw, 39px);
 
       font-weight: 900;
     }
 
-    /* FOOTER */
+    .bottom-download p {
+      margin-bottom: 22px;
+
+      color: var(--muted);
+    }
+
+
+    /* =========================================================
+       FOOTER
+       ========================================================= */
 
     footer {
       padding: 26px 0 42px;
@@ -577,14 +685,30 @@
       font-weight: 750;
     }
 
+    .vidya-footer {
+      display: flex;
+
+      align-items: center;
+
+      gap: 10px;
+
+      opacity: 0.78;
+    }
+
     .vidya-footer img {
       width: 85px;
 
       height: auto;
 
       object-fit: contain;
+    }
 
-      opacity: 0.78;
+    .vidya-footer span {
+      max-width: 145px;
+
+      font-size: 11px;
+
+      line-height: 1.45;
     }
 
     .disclaimer {
@@ -596,10 +720,13 @@
 
       font-size: 11px;
 
-      opacity: 0.72;
+      opacity: 0.75;
     }
 
-    /* SCREENSHOT VIEWER */
+
+    /* =========================================================
+       SIMPLE SCREENSHOT VIEWER
+       ========================================================= */
 
     .viewer {
       position: fixed;
@@ -668,13 +795,19 @@
       color: white;
 
       cursor: pointer;
+
+      box-shadow:
+        0 8px 30px rgba(0, 0, 0, 0.45);
     }
 
     .viewer-close .material-icons-round {
       font-size: 24px;
     }
 
-    /* RESPONSIVE */
+
+    /* =========================================================
+       RESPONSIVE
+       ========================================================= */
 
     @media (max-width: 900px) {
 
@@ -695,12 +828,17 @@
       }
 
       .hero {
-        padding-top: 54px;
+        padding-top: 53px;
+      }
+
+      .app-icon-box {
+        width: 136px;
+        height: 136px;
       }
 
       .hero-logo {
-        width: 145px;
-        height: 145px;
+        width: 107px;
+        height: 107px;
       }
 
       .info-grid {
@@ -708,7 +846,7 @@
       }
 
       .vidya-nav {
-        height: 29px;
+        height: 30px;
       }
 
       .footer-layout {
@@ -747,6 +885,10 @@
         font-size: 12px;
       }
 
+      .hero-description {
+        font-size: 15px;
+      }
+
       .viewer {
         padding: 14px;
       }
@@ -764,6 +906,10 @@
 
 
 <body class="dark">
+
+  <!-- =======================================================
+       NAV
+       ======================================================= -->
 
   <nav class="navbar">
 
@@ -802,6 +948,7 @@
           id="themeToggle"
           class="theme-button"
           aria-label="Switch theme"
+          title="Switch theme"
         >
 
           <span
@@ -822,31 +969,53 @@
 
   <main>
 
-    <!-- HERO -->
+    <!-- =====================================================
+         HERO
+         ===================================================== -->
 
     <section class="hero">
 
       <div class="container">
 
-        <img
-          src="assets/logo-blue.png"
-          class="hero-logo logo-blue"
-          alt="Fast Feed logo"
-        >
 
-        <img
-          src="assets/logo-white.png"
-          class="hero-logo logo-white"
-          alt="Fast Feed logo"
-        >
+        <div class="app-icon-box">
+
+          <img
+            src="assets/logo-blue.png"
+            class="hero-logo logo-blue"
+            alt="Fast Feed logo"
+          >
+
+          <img
+            src="assets/logo-white.png"
+            class="hero-logo logo-white"
+            alt="Fast Feed logo"
+          >
+
+        </div>
+
 
         <h1>
           Fast Feed
         </h1>
 
+
         <p class="hero-tagline">
+
           Vidya ERP. Simplified.
+
         </p>
+
+
+        <p class="hero-description">
+
+          Feedback automation, marks archive,
+          attendance and useful alerts in one cleaner
+          student experience.
+
+        </p>
+
+
 
         <a
           id="heroDownload"
@@ -861,6 +1030,7 @@
           Download for Android
 
         </a>
+
 
         <p class="version">
 
@@ -877,7 +1047,9 @@
     </section>
 
 
-    <!-- FEATURES -->
+    <!-- =====================================================
+         FEATURES
+         ===================================================== -->
 
     <section>
 
@@ -886,13 +1058,18 @@
         <div class="section-heading">
 
           <h2>
-            Features
+            Everything you need from ERP
           </h2>
+
+          <p>
+            The useful parts of Vidya ERP, without the clutter.
+          </p>
 
         </div>
 
 
         <div class="features">
+
 
           <article class="feature">
 
@@ -909,8 +1086,8 @@
             </h3>
 
             <p>
-              Find pending feedbacks, submit ratings
-              and verify every submission.
+              Find pending feedbacks, use your preferred
+              rating and verify every submission.
             </p>
 
           </article>
@@ -953,11 +1130,12 @@
             </h3>
 
             <p>
-              View attendance, subject percentages
-              and absence history.
+              Check overall and subject attendance,
+              percentages and absence history.
             </p>
 
           </article>
+
 
         </div>
 
@@ -966,7 +1144,9 @@
     </section>
 
 
-    <!-- SCREENSHOTS -->
+    <!-- =====================================================
+         SCREENSHOTS
+         ===================================================== -->
 
     <section>
 
@@ -975,13 +1155,18 @@
         <div class="section-heading">
 
           <h2>
-            Screenshots
+            Inside Fast Feed
           </h2>
+
+          <p>
+            Click any screenshot to view it.
+          </p>
 
         </div>
 
 
         <div class="screenshots">
+
 
           <div
             class="screenshot"
@@ -1058,6 +1243,7 @@
 
           </div>
 
+
         </div>
 
       </div>
@@ -1065,7 +1251,9 @@
     </section>
 
 
-    <!-- UPDATE + INSTALL -->
+    <!-- =====================================================
+         WHAT'S NEW + INSTALL
+         ===================================================== -->
 
     <section>
 
@@ -1083,11 +1271,25 @@
             class="list"
           >
 
-            <li>Attendance</li>
-            <li>Marks notifications</li>
-            <li>Absent-hour alerts</li>
-            <li>New onboarding</li>
-            <li>UI improvements</li>
+            <li>
+              Attendance
+            </li>
+
+            <li>
+              Marks notifications
+            </li>
+
+            <li>
+              Absent-hour alerts
+            </li>
+
+            <li>
+              New onboarding
+            </li>
+
+            <li>
+              UI improvements
+            </li>
 
           </ul>
 
@@ -1109,7 +1311,8 @@
 
             <li>
               <strong>2.</strong>
-              Allow installation if Android asks.
+              Allow installation from your browser if
+              Android asks.
             </li>
 
             <li>
@@ -1126,20 +1329,27 @@
 
         </div>
 
+
       </div>
 
     </section>
 
 
-    <!-- DOWNLOAD -->
+    <!-- =====================================================
+         DOWNLOAD
+         ===================================================== -->
 
     <section class="bottom-download">
 
       <div class="container">
 
         <h2>
-          Download Fast Feed
+          Ready to use Fast Feed?
         </h2>
+
+        <p>
+          Download the latest Android release.
+        </p>
 
         <a
           id="bottomDownload"
@@ -1151,7 +1361,7 @@
             download
           </span>
 
-          Download for Android
+          Download Fast Feed
 
         </a>
 
@@ -1159,16 +1369,21 @@
 
     </section>
 
+
   </main>
 
 
-  <!-- FOOTER -->
+  <!-- =======================================================
+       FOOTER
+       ======================================================= -->
 
   <footer>
 
     <div class="container">
 
+
       <div class="footer-layout">
+
 
         <div class="footer-left">
 
@@ -1183,7 +1398,9 @@
           </p>
 
           <p>
+
             Created by T S Vishnu Narayanan
+
           </p>
 
           <p>
@@ -1206,22 +1423,32 @@
             alt="Vidya"
           >
 
+          <span>
+            Made for students using Vidya ERP.
+          </span>
+
         </div>
+
 
       </div>
 
 
       <p class="disclaimer">
+
         Fast Feed is an independent student-made companion
         and is not an official Vidya Academy application.
+
       </p>
+
 
     </div>
 
   </footer>
 
 
-  <!-- SCREENSHOT VIEWER -->
+  <!-- =======================================================
+       SIMPLE SCREENSHOT VIEWER
+       ======================================================= -->
 
   <div
     id="viewer"
@@ -1242,7 +1469,7 @@
         id="viewerClose"
         class="viewer-close"
         type="button"
-        aria-label="Close"
+        aria-label="Close screenshot"
       >
 
         <span class="material-icons-round">
@@ -1256,7 +1483,15 @@
   </div>
 
 
+  <!-- =======================================================
+       JAVASCRIPT
+       ======================================================= -->
+
   <script>
+
+    /* =======================================================
+       THEME
+       ======================================================= */
 
     const body =
       document.body;
@@ -1292,6 +1527,17 @@
           : "dark_mode";
 
 
+      themeToggle.setAttribute(
+
+        "aria-label",
+
+        dark
+          ? "Switch to light mode"
+          : "Switch to dark mode"
+
+      );
+
+
       themeColor.setAttribute(
 
         "content",
@@ -1321,6 +1567,14 @@
       );
 
 
+    /*
+      Fast Feed starts in dark mode by default
+      to match the app.
+
+      If the visitor previously selected light
+      mode, their choice is remembered.
+    */
+
     applyTheme(
       savedTheme || "dark",
       false
@@ -1333,9 +1587,13 @@
 
       () => {
 
+        const currentlyDark =
+          body.classList.contains("dark");
+
+
         applyTheme(
 
-          body.classList.contains("dark")
+          currentlyDark
             ? "light"
             : "dark"
 
@@ -1346,7 +1604,9 @@
     );
 
 
-    /* VERSION.JSON */
+    /* =======================================================
+       VERSION.JSON
+       ======================================================= */
 
     async function loadVersionInfo() {
 
@@ -1439,7 +1699,14 @@
 
       }
 
-      catch (_) {}
+      catch (_) {
+
+        /*
+          The website remains completely usable
+          if version.json temporarily fails.
+        */
+
+      }
 
     }
 
@@ -1447,7 +1714,9 @@
     loadVersionInfo();
 
 
-    /* SCREENSHOT VIEWER */
+    /* =======================================================
+       SIMPLE SCREENSHOT VIEWER
+       ======================================================= */
 
     const viewer =
       document.getElementById("viewer");
@@ -1524,8 +1793,11 @@
             () => {
 
               openViewer(
+
                 card.dataset.image,
+
                 card.dataset.title
+
               );
 
             }
@@ -1541,6 +1813,11 @@
       closeViewer
     );
 
+
+    /*
+      Clicking the dark background closes
+      the screenshot.
+    */
 
     viewer.addEventListener(
 
@@ -1558,6 +1835,10 @@
 
     );
 
+
+    /*
+      Escape also closes it on desktop.
+    */
 
     document.addEventListener(
 
