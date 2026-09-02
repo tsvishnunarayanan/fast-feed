@@ -1,8 +1,13 @@
 {
-  "version": "1.4.1",
+  "version": "1.4.0",
   "downloadUrl": "https://github.com/tsvishnunarayanan/Fast-Feed-Releases/releases/latest/download/FastFeed.apk",
   "notes": [
-    "Testing the new Fast Feed updater",
-    "Improved update system"
+    "Feedback Automation",
+    "Marks Archive",
+    "Attendance",
+    "New mark alerts",
+    "Absent-hour alerts",
+    "New onboarding",
+    "UI improvements"
   ]
 }
