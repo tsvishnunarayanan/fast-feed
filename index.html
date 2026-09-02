@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
 
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
   <title>Fast Feed - Vidya ERP Companion</title>
 
@@ -15,624 +18,1669 @@
 
   <meta
     name="keywords"
-    content="Fast Feed, Vidya ERP, Vidya Academy, attendance, marks, feedback automation"
+    content="Fast Feed, Vidya ERP, Vidya Academy, attendance, marks, feedback automation, Vidya Academy of Science and Technology"
   >
 
-  <meta name="theme-color" content="#2563eb">
+  <meta
+    name="theme-color"
+    content="#2563eb"
+    id="themeColor"
+  >
+
+  <!-- Same rounded Material icon family used by the Flutter app -->
+  <link
+    href="https://fonts.googleapis.com/icon?family=Material+Icons+Round"
+    rel="stylesheet"
+  >
 
   <style>
-    :root {
-      --primary: #2563eb;
-      --primary-soft: #dbeafe;
-      --primary-text: #0f3f82;
 
-      --bg: #f7f9fc;
+    /* =========================================================
+       THEME
+       ========================================================= */
+
+    :root {
+
+      --primary: #2563eb;
+
+      --primary-container: #dbeafe;
+
+      --on-primary-container: #17467f;
+
+      --background: #f8fafc;
+
       --surface: #ffffff;
-      --surface-soft: #f1f5f9;
+
+      --surface-low: #f8fafc;
+
+      --surface-high: #eef2f7;
 
       --text: #111827;
-      --muted: #64748b;
 
-      --border: rgba(15, 23, 42, 0.10);
-      --grid: rgba(15, 23, 42, 0.045);
+      --muted: #667085;
+
+      --border:
+        rgba(
+          15,
+          23,
+          42,
+          0.10
+        );
+
+      --grid:
+        rgba(
+          15,
+          23,
+          42,
+          0.045
+        );
 
       --shadow:
-        0 12px 35px rgba(15, 23, 42, 0.07);
+        0 14px 38px
+        rgba(
+          15,
+          23,
+          42,
+          0.07
+        );
+
     }
+
 
     body.dark {
-      --primary: #5b9cf6;
-      --primary-soft: #163b68;
-      --primary-text: #dbeafe;
 
-      --bg: #101217;
-      --surface: #191c22;
-      --surface-soft: #23272f;
+      --primary: #8ebcff;
 
-      --text: #f5f7fb;
-      --muted: #aeb6c5;
+      --primary-container: #20558d;
 
-      --border: rgba(255, 255, 255, 0.10);
-      --grid: rgba(255, 255, 255, 0.045);
+      --on-primary-container: #eef6ff;
+
+      --background: #101217;
+
+      --surface: #191c21;
+
+      --surface-low: #171a1f;
+
+      --surface-high: #252930;
+
+      --text: #f4f6fb;
+
+      --muted: #aeb5c2;
+
+      --border:
+        rgba(
+          255,
+          255,
+          255,
+          0.11
+        );
+
+      --grid:
+        rgba(
+          255,
+          255,
+          255,
+          0.045
+        );
 
       --shadow:
-        0 14px 40px rgba(0, 0, 0, 0.28);
+        0 16px 42px
+        rgba(
+          0,
+          0,
+          0,
+          0.30
+        );
+
     }
+
+
+    /* =========================================================
+       BASE
+       ========================================================= */
 
     * {
+
       box-sizing: border-box;
+
       margin: 0;
+
       padding: 0;
+
     }
+
 
     html {
+
       scroll-behavior: smooth;
+
     }
 
+
     body {
+
+      min-height: 100vh;
+
       font-family:
         Inter,
         system-ui,
         -apple-system,
         BlinkMacSystemFont,
         "Segoe UI",
+        Arial,
         sans-serif;
 
-      background-color: var(--bg);
-      color: var(--text);
+      background-color:
+        var(--background);
 
-      min-height: 100vh;
+      color:
+        var(--text);
 
       background-image:
+
         linear-gradient(
           var(--grid) 1px,
           transparent 1px
         ),
+
         linear-gradient(
           90deg,
           var(--grid) 1px,
           transparent 1px
         );
 
-      background-size: 52px 52px;
+      background-size:
+        52px 52px;
 
       transition:
         background-color 0.25s ease,
         color 0.25s ease;
+
     }
+
+
+    body.lightbox-active {
+
+      overflow: hidden;
+
+    }
+
 
     a {
-      text-decoration: none;
+
       color: inherit;
+
+      text-decoration: none;
+
     }
+
 
     button {
+
       font: inherit;
+
     }
+
 
     img {
+
       display: block;
+
       max-width: 100%;
+
     }
+
 
     .container {
-      width: min(1100px, calc(100% - 36px));
-      margin: auto;
+
+      width:
+        min(
+          1080px,
+          calc(100% - 36px)
+        );
+
+      margin:
+        0 auto;
+
     }
 
-    /* NAV */
 
-    nav {
+    /* =========================================================
+       NAVIGATION
+       ========================================================= */
+
+    .navbar {
+
       position: sticky;
+
       top: 0;
+
       z-index: 100;
 
-      background: color-mix(
-        in srgb,
-        var(--bg) 88%,
-        transparent
-      );
-
-      backdrop-filter: blur(14px);
-
       border-bottom:
-        1px solid var(--border);
+        1px solid
+        var(--border);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--background)
+          88%,
+          transparent
+        );
+
+      backdrop-filter:
+        blur(15px);
+
+      -webkit-backdrop-filter:
+        blur(15px);
+
     }
 
+
     .nav-inner {
-      min-height: 72px;
+
+      height: 72px;
 
       display: flex;
+
       align-items: center;
+
       justify-content: space-between;
 
       gap: 20px;
+
     }
 
-    .brand {
+
+    .nav-brand {
+
       display: flex;
+
       align-items: center;
+
       gap: 11px;
 
-      font-size: 20px;
       font-weight: 900;
+
+      font-size: 20px;
+
     }
 
-    .mini-logo {
-      width: 38px;
-      height: 38px;
+
+    .nav-logo {
+
+      width: 42px;
+
+      height: 42px;
+
       object-fit: contain;
+
     }
+
+
+    .logo-white {
+
+      display: none;
+
+    }
+
+
+    body.dark .logo-blue {
+
+      display: none;
+
+    }
+
+
+    body.dark .logo-white {
+
+      display: block;
+
+    }
+
+
+    /* =========================================================
+       THEME BUTTON
+       ========================================================= */
 
     .theme-button {
-      width: 44px;
-      height: 44px;
 
-      border: 1px solid var(--border);
-      border-radius: 14px;
+      width: 46px;
 
-      background: var(--surface);
-      color: var(--text);
+      height: 46px;
+
+      position: relative;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 15px;
+
+      background:
+        var(--surface);
+
+      color:
+        var(--text);
+
+      box-shadow:
+        var(--shadow);
 
       cursor: pointer;
 
       display: grid;
+
       place-items: center;
 
-      font-size: 21px;
+      transition:
+        transform 0.18s ease,
+        background 0.25s ease,
+        color 0.25s ease;
 
-      transition: 0.2s;
     }
+
 
     .theme-button:hover {
-      transform: translateY(-1px);
+
+      transform:
+        translateY(-2px);
+
     }
 
-    /* HERO */
+
+    .theme-button:active {
+
+      transform:
+        scale(0.96);
+
+    }
+
+
+    .theme-icon {
+
+      position: absolute;
+
+      width: 22px;
+
+      height: 22px;
+
+      fill: none;
+
+      stroke:
+        currentColor;
+
+      stroke-width: 2;
+
+      stroke-linecap: round;
+
+      stroke-linejoin: round;
+
+      transition:
+        opacity 0.22s ease,
+        transform 0.28s ease;
+
+    }
+
+
+    .moon-icon {
+
+      opacity: 1;
+
+      transform:
+        rotate(0deg)
+        scale(1);
+
+    }
+
+
+    .sun-icon {
+
+      opacity: 0;
+
+      transform:
+        rotate(-45deg)
+        scale(0.65);
+
+    }
+
+
+    body.dark .moon-icon {
+
+      opacity: 0;
+
+      transform:
+        rotate(45deg)
+        scale(0.65);
+
+    }
+
+
+    body.dark .sun-icon {
+
+      opacity: 1;
+
+      transform:
+        rotate(0deg)
+        scale(1);
+
+    }
+
+
+    /* =========================================================
+       HERO
+       ========================================================= */
 
     .hero {
+
       padding:
-        76px 0
-        60px;
+        72px 0
+        54px;
 
       text-align: center;
+
     }
 
+
     .main-logo {
-      width: 170px;
-      height: 170px;
+
+      width: 190px;
+
+      height: 190px;
 
       object-fit: contain;
 
       margin:
         0 auto
-        25px;
+        24px;
+
     }
 
-    .logo-white {
-      display: none;
-    }
-
-    body.dark .logo-blue {
-      display: none;
-    }
-
-    body.dark .logo-white {
-      display: block;
-    }
 
     .hero h1 {
-      font-size:
-        clamp(44px, 7vw, 72px);
 
-      line-height: 1;
-      letter-spacing: -2px;
+      font-size:
+        clamp(
+          46px,
+          7vw,
+          70px
+        );
 
       font-weight: 950;
 
-      margin-bottom: 14px;
+      line-height: 1;
+
+      letter-spacing:
+        -2px;
+
+      margin-bottom:
+        14px;
+
     }
 
-    .hero-subtitle {
+
+    .hero-tagline {
+
       font-size:
-        clamp(18px, 2vw, 22px);
+        clamp(
+          18px,
+          2vw,
+          22px
+        );
 
-      color: var(--muted);
+      color:
+        var(--muted);
 
-      margin-bottom: 9px;
+      font-weight: 700;
 
-      font-weight: 650;
+      margin-bottom:
+        9px;
+
     }
+
 
     .hero-description {
-      max-width: 660px;
+
+      width: min(
+        620px,
+        100%
+      );
+
       margin:
         0 auto
         30px;
 
-      color: var(--muted);
+      color:
+        var(--muted);
+
       line-height: 1.65;
 
       font-size: 16px;
+
     }
 
+
+    /* =========================================================
+       BUTTON
+       ========================================================= */
+
     .download-button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+
+      display:
+        inline-flex;
+
+      align-items:
+        center;
+
+      justify-content:
+        center;
 
       gap: 9px;
 
-      background: var(--primary);
-      color: white;
-
       padding:
-        15px 25px;
+        15px 24px;
 
-      border-radius: 16px;
+      border-radius:
+        16px;
+
+      background:
+        var(--primary);
+
+      color:
+        #ffffff;
 
       font-size: 16px;
+
       font-weight: 850;
 
-      box-shadow: var(--shadow);
+      box-shadow:
+        var(--shadow);
 
-      transition: 0.18s;
+      transition:
+        transform 0.18s ease,
+        opacity 0.18s ease;
+
     }
+
+
+    body.dark
+    .download-button {
+
+      color:
+        #071525;
+
+    }
+
 
     .download-button:hover {
-      transform: translateY(-2px);
+
+      transform:
+        translateY(-2px);
+
     }
+
+
+    .download-button
+    .material-icons-round {
+
+      font-size:
+        21px;
+
+    }
+
 
     .version {
-      margin-top: 14px;
 
-      color: var(--muted);
+      margin-top:
+        14px;
 
-      font-size: 14px;
+      color:
+        var(--muted);
+
+      font-size:
+        14px;
+
     }
 
-    /* FEATURES */
+
+    /* =========================================================
+       GENERAL SECTIONS
+       ========================================================= */
 
     section {
+
       padding:
         38px 0;
+
     }
+
 
     .section-heading {
-      text-align: center;
-      margin-bottom: 30px;
+
+      text-align:
+        center;
+
+      margin-bottom:
+        28px;
+
     }
+
 
     .section-heading h2 {
+
       font-size:
-        clamp(28px, 4vw, 38px);
+        clamp(
+          28px,
+          4vw,
+          38px
+        );
 
-      font-weight: 900;
+      font-weight:
+        900;
 
-      margin-bottom: 8px;
+      margin-bottom:
+        8px;
+
+      letter-spacing:
+        -0.6px;
+
     }
+
 
     .section-heading p {
-      color: var(--muted);
-      line-height: 1.6;
+
+      color:
+        var(--muted);
+
+      line-height:
+        1.6;
+
     }
+
+
+    /* =========================================================
+       FEATURE CARDS
+       ========================================================= */
 
     .features {
-      display: grid;
+
+      display:
+        grid;
 
       grid-template-columns:
-        repeat(3, 1fr);
+        repeat(
+          3,
+          1fr
+        );
 
-      gap: 17px;
+      gap:
+        17px;
+
     }
+
 
     .feature {
-      background: var(--surface);
+
+      background:
+        var(--surface);
 
       border:
-        1px solid var(--border);
+        1px solid
+        var(--border);
 
-      border-radius: 24px;
-
-      padding: 22px;
-
-      box-shadow: var(--shadow);
-    }
-
-    .feature-icon {
-      width: 52px;
-      height: 52px;
-
-      border-radius: 16px;
-
-      display: grid;
-      place-items: center;
-
-      background: var(--primary-soft);
-      color: var(--primary-text);
-
-      font-size: 24px;
-
-      margin-bottom: 17px;
-    }
-
-    .feature h3 {
-      font-size: 19px;
-      font-weight: 850;
-
-      margin-bottom: 9px;
-    }
-
-    .feature p {
-      color: var(--muted);
-
-      line-height: 1.55;
-
-      font-size: 14px;
-    }
-
-    /* SCREENSHOTS */
-
-    .screenshots {
-      display: grid;
-
-      grid-template-columns:
-        repeat(4, 1fr);
-
-      gap: 16px;
-
-      align-items: start;
-    }
-
-    .screenshot {
-      background: var(--surface);
-
-      border:
-        1px solid var(--border);
-
-      border-radius: 24px;
-
-      padding: 9px;
-
-      box-shadow: var(--shadow);
-    }
-
-    .screenshot img {
-      width: 100%;
-
-      border-radius: 17px;
-    }
-
-    .screen-name {
-      text-align: center;
-
-      color: var(--muted);
-
-      font-size: 13px;
-      font-weight: 700;
+      border-radius:
+        24px;
 
       padding:
-        11px 4px
-        5px;
+        22px;
+
+      box-shadow:
+        var(--shadow);
+
+      transition:
+        transform 0.18s ease;
+
     }
 
-    /* INFO */
+
+    .feature:hover {
+
+      transform:
+        translateY(-3px);
+
+    }
+
+
+    .feature-icon {
+
+      width: 54px;
+
+      height: 54px;
+
+      display: grid;
+
+      place-items: center;
+
+      margin-bottom:
+        17px;
+
+      border-radius:
+        17px;
+
+      background:
+        var(--primary-container);
+
+      color:
+        var(--on-primary-container);
+
+    }
+
+
+    .feature-icon
+    .material-icons-round {
+
+      font-size:
+        28px;
+
+    }
+
+
+    .feature h3 {
+
+      font-size:
+        19px;
+
+      font-weight:
+        850;
+
+      margin-bottom:
+        9px;
+
+    }
+
+
+    .feature p {
+
+      color:
+        var(--muted);
+
+      line-height:
+        1.58;
+
+      font-size:
+        14px;
+
+    }
+
+
+    /* =========================================================
+       SCREENSHOTS
+       ========================================================= */
+
+    .screenshots {
+
+      display:
+        grid;
+
+      grid-template-columns:
+        repeat(
+          4,
+          1fr
+        );
+
+      gap:
+        15px;
+
+      align-items:
+        start;
+
+    }
+
+
+    .screenshot {
+
+      background:
+        var(--surface);
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        23px;
+
+      padding:
+        8px;
+
+      box-shadow:
+        var(--shadow);
+
+      transition:
+        transform 0.18s ease,
+        border-color 0.18s ease;
+
+    }
+
+
+    .screenshot:hover {
+
+      transform:
+        translateY(-3px);
+
+      border-color:
+        color-mix(
+          in srgb,
+          var(--primary)
+          40%,
+          var(--border)
+        );
+
+    }
+
+
+    .screenshot img {
+
+      width:
+        100%;
+
+      border-radius:
+        17px;
+
+      cursor:
+        zoom-in;
+
+    }
+
+
+    .screen-name {
+
+      padding:
+        11px 5px
+        5px;
+
+      color:
+        var(--muted);
+
+      font-size:
+        13px;
+
+      font-weight:
+        700;
+
+      text-align:
+        center;
+
+    }
+
+
+    /* =========================================================
+       UPDATE + INSTALL
+       ========================================================= */
 
     .info-grid {
-      display: grid;
+
+      display:
+        grid;
 
       grid-template-columns:
         1fr 1fr;
 
-      gap: 18px;
+      gap:
+        18px;
+
     }
+
 
     .info-card {
-      background: var(--surface);
+
+      background:
+        var(--surface);
 
       border:
-        1px solid var(--border);
+        1px solid
+        var(--border);
 
-      border-radius: 24px;
+      border-radius:
+        24px;
 
-      padding: 24px;
+      padding:
+        24px;
 
-      box-shadow: var(--shadow);
+      box-shadow:
+        var(--shadow);
+
     }
+
 
     .info-card h3 {
-      font-size: 21px;
 
-      margin-bottom: 16px;
+      font-size:
+        21px;
 
-      font-weight: 900;
+      font-weight:
+        900;
+
+      margin-bottom:
+        16px;
+
     }
+
 
     .list {
-      list-style: none;
 
-      display: grid;
-      gap: 10px;
+      list-style:
+        none;
+
+      display:
+        grid;
+
+      gap:
+        9px;
+
     }
 
-    .list li {
-      color: var(--muted);
 
-      line-height: 1.5;
+    .list li {
 
       padding:
         11px 13px;
 
-      border-radius: 13px;
+      border-radius:
+        13px;
 
-      background: var(--surface-soft);
+      color:
+        var(--muted);
+
+      background:
+        var(--surface-high);
+
+      line-height:
+        1.5;
+
     }
 
-    /* BOTTOM CTA */
+
+    .list strong {
+
+      color:
+        var(--text);
+
+    }
+
+
+    /* =========================================================
+       FINAL DOWNLOAD
+       ========================================================= */
 
     .bottom-download {
-      text-align: center;
 
       padding:
-        55px 0
-        45px;
+        52px 0
+        44px;
+
+      text-align:
+        center;
+
     }
+
 
     .bottom-download h2 {
-      font-size:
-        clamp(28px, 4vw, 38px);
 
-      margin-bottom: 10px;
+      font-size:
+        clamp(
+          28px,
+          4vw,
+          38px
+        );
+
+      font-weight:
+        900;
+
+      margin-bottom:
+        10px;
+
     }
+
 
     .bottom-download p {
-      color: var(--muted);
 
-      margin-bottom: 23px;
+      margin-bottom:
+        22px;
+
+      color:
+        var(--muted);
+
     }
 
-    /* FOOTER */
+
+    /* =========================================================
+       FOOTER
+       ========================================================= */
 
     footer {
+
       padding:
-        24px 0
+        22px 0
         38px;
 
-      text-align: center;
+      text-align:
+        center;
 
-      color: var(--muted);
+      color:
+        var(--muted);
 
-      font-size: 13px;
+      font-size:
+        13px;
+
+      line-height:
+        1.7;
+
     }
+
 
     footer strong {
-      color: var(--text);
+
+      color:
+        var(--text);
+
     }
+
 
     footer a {
-      color: var(--primary);
+
+      color:
+        var(--primary);
+
+      font-weight:
+        700;
+
     }
 
-    /* RESPONSIVE */
 
-    @media (max-width: 900px) {
+    /* =========================================================
+       SCREENSHOT LIGHTBOX
+       ========================================================= */
+
+    .lightbox {
+
+      position:
+        fixed;
+
+      inset:
+        0;
+
+      z-index:
+        9999;
+
+      display:
+        none;
+
+      flex-direction:
+        column;
+
+      background:
+        rgba(
+          0,
+          0,
+          0,
+          0.91
+        );
+
+      backdrop-filter:
+        blur(12px);
+
+      -webkit-backdrop-filter:
+        blur(12px);
+
+    }
+
+
+    .lightbox.open {
+
+      display:
+        flex;
+
+    }
+
+
+    .lightbox-toolbar {
+
+      min-height:
+        68px;
+
+      display:
+        flex;
+
+      align-items:
+        center;
+
+      justify-content:
+        space-between;
+
+      gap:
+        15px;
+
+      padding:
+        11px 18px;
+
+      color:
+        white;
+
+      border-bottom:
+        1px solid
+        rgba(
+          255,
+          255,
+          255,
+          0.10
+        );
+
+    }
+
+
+    .lightbox-title {
+
+      min-width: 0;
+
+      font-weight:
+        800;
+
+      white-space:
+        nowrap;
+
+      overflow:
+        hidden;
+
+      text-overflow:
+        ellipsis;
+
+    }
+
+
+    .lightbox-controls {
+
+      display:
+        flex;
+
+      align-items:
+        center;
+
+      gap:
+        8px;
+
+    }
+
+
+    .lightbox-button {
+
+      width:
+        42px;
+
+      height:
+        42px;
+
+      border:
+        1px solid
+        rgba(
+          255,
+          255,
+          255,
+          0.17
+        );
+
+      border-radius:
+        13px;
+
+      background:
+        rgba(
+          255,
+          255,
+          255,
+          0.10
+        );
+
+      color:
+        white;
+
+      cursor:
+        pointer;
+
+      display:
+        grid;
+
+      place-items:
+        center;
+
+      transition:
+        background 0.18s ease,
+        transform 0.18s ease;
+
+    }
+
+
+    .lightbox-button:hover {
+
+      background:
+        rgba(
+          255,
+          255,
+          255,
+          0.18
+        );
+
+    }
+
+
+    .lightbox-button:active {
+
+      transform:
+        scale(0.94);
+
+    }
+
+
+    .lightbox-button
+    .material-icons-round {
+
+      font-size:
+        22px;
+
+    }
+
+
+    .zoom-value {
+
+      min-width:
+        50px;
+
+      text-align:
+        center;
+
+      color:
+        rgba(
+          255,
+          255,
+          255,
+          0.78
+        );
+
+      font-size:
+        13px;
+
+      font-weight:
+        700;
+
+    }
+
+
+    .lightbox-stage {
+
+      flex:
+        1;
+
+      overflow:
+        auto;
+
+      padding:
+        20px 20px
+        42px;
+
+      display:
+        flex;
+
+      justify-content:
+        center;
+
+      align-items:
+        flex-start;
+
+    }
+
+
+    .lightbox-image {
+
+      width:
+        min(
+          440px,
+          92vw
+        );
+
+      height:
+        auto;
+
+      border-radius:
+        19px;
+
+      box-shadow:
+        0 24px 90px
+        rgba(
+          0,
+          0,
+          0,
+          0.70
+        );
+
+      transform-origin:
+        top center;
+
+      transition:
+        transform 0.16s ease;
+
+      user-select:
+        none;
+
+      -webkit-user-drag:
+        none;
+
+      cursor:
+        zoom-in;
+
+    }
+
+
+    /* =========================================================
+       RESPONSIVE
+       ========================================================= */
+
+    @media
+    (
+      max-width: 900px
+    ) {
+
       .features {
+
         grid-template-columns:
           1fr;
+
       }
+
 
       .screenshots {
+
         grid-template-columns:
-          repeat(2, 1fr);
+          repeat(
+            2,
+            1fr
+          );
+
       }
+
     }
 
-    @media (max-width: 650px) {
-      .hero {
-        padding-top: 52px;
+
+    @media
+    (
+      max-width: 650px
+    ) {
+
+      .container {
+
+        width:
+          min(
+            100% - 28px,
+            1080px
+          );
+
       }
+
+
+      .hero {
+
+        padding-top:
+          50px;
+
+      }
+
 
       .main-logo {
-        width: 135px;
-        height: 135px;
+
+        width:
+          150px;
+
+        height:
+          150px;
+
       }
+
 
       .info-grid {
+
         grid-template-columns:
           1fr;
+
       }
 
+
       .screenshots {
+
+        gap:
+          10px;
+
+      }
+
+
+      .feature {
+
+        padding:
+          20px;
+
+      }
+
+
+      .lightbox-title {
+
+        display:
+          none;
+
+      }
+
+
+      .lightbox-toolbar {
+
+        justify-content:
+          flex-end;
+
+        padding:
+          10px;
+
+      }
+
+
+      .lightbox-button {
+
+        width:
+          40px;
+
+        height:
+          40px;
+
+      }
+
+    }
+
+
+    @media
+    (
+      max-width: 420px
+    ) {
+
+      .screenshots {
+
         grid-template-columns:
           1fr 1fr;
 
-        gap: 10px;
       }
 
-      .feature {
-        padding: 20px;
+
+      .zoom-value {
+
+        min-width:
+          42px;
+
       }
+
     }
+
   </style>
+
 </head>
+
 
 <body>
 
-  <nav>
+  <!-- =======================================================
+       NAVBAR
+       ======================================================= -->
+
+  <nav class="navbar">
+
     <div class="container nav-inner">
 
-      <div class="brand">
+      <div class="nav-brand">
 
         <img
-          class="mini-logo logo-blue"
           src="assets/logo-blue.png"
+          class="nav-logo logo-blue"
           alt="Fast Feed"
         >
 
         <img
-          class="mini-logo logo-white"
           src="assets/logo-white.png"
+          class="nav-logo logo-white"
           alt="Fast Feed"
         >
 
-        Fast Feed
+        <span>
+          Fast Feed
+        </span>
 
       </div>
+
 
       <button
         id="themeToggle"
         class="theme-button"
-        aria-label="Toggle dark mode"
+        aria-label="Switch to dark mode"
+        title="Change theme"
       >
-        ☾
+
+        <!-- MOON -->
+
+        <svg
+          class="theme-icon moon-icon"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+
+          <path
+            d="
+              M21 12.8
+              A8.5 8.5 0 1 1 11.2 3
+              A6.6 6.6 0 0 0 21 12.8Z
+            "
+          />
+
+        </svg>
+
+
+        <!-- SUN -->
+
+        <svg
+          class="theme-icon sun-icon"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+
+          <circle
+            cx="12"
+            cy="12"
+            r="4"
+          />
+
+          <path d="M12 2V4"/>
+          <path d="M12 20V22"/>
+          <path d="M4.93 4.93L6.34 6.34"/>
+          <path d="M17.66 17.66L19.07 19.07"/>
+          <path d="M2 12H4"/>
+          <path d="M20 12H22"/>
+          <path d="M4.93 19.07L6.34 17.66"/>
+          <path d="M17.66 6.34L19.07 4.93"/>
+
+        </svg>
+
       </button>
 
     </div>
+
   </nav>
 
 
   <main>
 
-    <!-- HERO -->
+    <!-- =====================================================
+         HERO
+         ===================================================== -->
 
     <section class="hero">
 
       <div class="container">
 
         <img
-          class="main-logo logo-blue"
           src="assets/logo-blue.png"
+          class="main-logo logo-blue"
           alt="Fast Feed logo"
         >
 
         <img
-          class="main-logo logo-white"
           src="assets/logo-white.png"
+          class="main-logo logo-white"
           alt="Fast Feed logo"
         >
 
-        <h1>Fast Feed</h1>
 
-        <p class="hero-subtitle">
+        <h1>
+          Fast Feed
+        </h1>
+
+
+        <p class="hero-tagline">
+
           Vidya ERP. Simplified.
+
         </p>
+
 
         <p class="hero-description">
+
           Feedback automation, marks and attendance
           in one cleaner student experience.
+
         </p>
+
 
         <a
           id="heroDownload"
           class="download-button"
           href="https://github.com/tsvishnunarayanan/Fast-Feed-Releases/releases/latest/download/FastFeed.apk"
         >
-          ↓ Download for Android
+
+          <span class="material-icons-round">
+            download
+          </span>
+
+          Download for Android
+
         </a>
 
+
         <p class="version">
+
           Latest version:
-          <strong id="versionText">v1.4.0</strong>
+
+          <strong id="versionText">
+            v1.4.0
+          </strong>
+
         </p>
 
       </div>
@@ -640,15 +1688,19 @@
     </section>
 
 
-    <!-- FEATURES -->
+    <!-- =====================================================
+         FEATURES
+         ===================================================== -->
 
-    <section>
+    <section id="features">
 
       <div class="container">
 
         <div class="section-heading">
 
-          <h2>Everything you need from ERP</h2>
+          <h2>
+            Everything you need from ERP
+          </h2>
 
           <p>
             Just the useful parts, made easier.
@@ -659,49 +1711,98 @@
 
         <div class="features">
 
+
+          <!-- FEEDBACK -->
+
           <article class="feature">
 
             <div class="feature-icon">
-              ⚡
+
+              <span class="material-icons-round">
+
+                bolt
+
+              </span>
+
             </div>
 
-            <h3>Feedback Automation</h3>
+
+            <h3>
+
+              Feedback Automation
+
+            </h3>
+
 
             <p>
+
               Find pending feedbacks, submit your
               preferred rating and verify submissions.
+
             </p>
 
           </article>
 
 
+          <!-- MARKS -->
+
           <article class="feature">
 
             <div class="feature-icon">
-              ▤
+
+              <span class="material-icons-round">
+
+                table_chart
+
+              </span>
+
             </div>
 
-            <h3>Marks Archive</h3>
+
+            <h3>
+
+              Marks Archive
+
+            </h3>
+
 
             <p>
+
               View series marks by semester and keep
               synced reports available offline.
+
             </p>
 
           </article>
 
 
+          <!-- ATTENDANCE -->
+
           <article class="feature">
 
             <div class="feature-icon">
-              ✓
+
+              <span class="material-icons-round">
+
+                fact_check
+
+              </span>
+
             </div>
 
-            <h3>Attendance</h3>
+
+            <h3>
+
+              Attendance
+
+            </h3>
+
 
             <p>
+
               Check subject attendance, percentages
               and absence history in one place.
+
             </p>
 
           </article>
@@ -713,18 +1814,27 @@
     </section>
 
 
-    <!-- SCREENSHOTS -->
+    <!-- =====================================================
+         SCREENSHOTS
+         ===================================================== -->
 
-    <section>
+    <section id="screens">
 
       <div class="container">
 
         <div class="section-heading">
 
-          <h2>Inside Fast Feed</h2>
+          <h2>
+
+            Inside Fast Feed
+
+          </h2>
+
 
           <p>
-            A familiar interface designed around the app.
+
+            Tap any screenshot to view it in detail.
+
           </p>
 
         </div>
@@ -732,15 +1842,19 @@
 
         <div class="screenshots">
 
+
           <div class="screenshot">
 
             <img
               src="assets/home.jpg"
               alt="Fast Feed Home"
+              loading="lazy"
             >
 
             <p class="screen-name">
+
               Home
+
             </p>
 
           </div>
@@ -751,10 +1865,13 @@
             <img
               src="assets/automation.jpg"
               alt="Feedback Automation"
+              loading="lazy"
             >
 
             <p class="screen-name">
+
               Automation
+
             </p>
 
           </div>
@@ -765,10 +1882,13 @@
             <img
               src="assets/marks.jpg"
               alt="Marks Archive"
+              loading="lazy"
             >
 
             <p class="screen-name">
+
               Marks Archive
+
             </p>
 
           </div>
@@ -779,13 +1899,17 @@
             <img
               src="assets/attendance.jpg"
               alt="Attendance"
+              loading="lazy"
             >
 
             <p class="screen-name">
+
               Attendance
+
             </p>
 
           </div>
+
 
         </div>
 
@@ -794,91 +1918,155 @@
     </section>
 
 
-    <!-- UPDATE / INSTALL -->
+    <!-- =====================================================
+         UPDATE / INSTALL
+         ===================================================== -->
 
     <section>
 
       <div class="container info-grid">
 
+
+        <!-- WHAT'S NEW -->
+
         <div class="info-card">
 
           <h3>
+
             What's new
+
           </h3>
+
 
           <ul
             id="releaseNotes"
             class="list"
           >
 
-            <li>Attendance</li>
-            <li>Marks notifications</li>
-            <li>Absent-hour alerts</li>
-            <li>UI improvements</li>
+            <li>
+              Attendance
+            </li>
+
+            <li>
+              Marks notifications
+            </li>
+
+            <li>
+              Absent-hour alerts
+            </li>
+
+            <li>
+              UI improvements
+            </li>
 
           </ul>
 
         </div>
 
+
+        <!-- INSTALL -->
 
         <div class="info-card">
 
           <h3>
+
             Install Fast Feed
+
           </h3>
+
 
           <ul class="list">
 
             <li>
-              <strong>1.</strong>
+
+              <strong>
+                1.
+              </strong>
+
               Download FastFeed.apk
+
             </li>
 
+
             <li>
-              <strong>2.</strong>
+
+              <strong>
+                2.
+              </strong>
+
               Allow installation from your browser
               if Android asks.
+
             </li>
 
+
             <li>
-              <strong>3.</strong>
+
+              <strong>
+                3.
+              </strong>
+
               Install and open Fast Feed.
+
             </li>
 
+
             <li>
-              <strong>4.</strong>
+
+              <strong>
+                4.
+              </strong>
+
               Login using your Vidya ERP account.
+
             </li>
 
           </ul>
 
         </div>
+
 
       </div>
 
     </section>
 
 
-    <!-- FINAL DOWNLOAD -->
+    <!-- =====================================================
+         BOTTOM DOWNLOAD
+         ===================================================== -->
 
     <section class="bottom-download">
 
       <div class="container">
 
         <h2>
+
           Ready to use Fast Feed?
+
         </h2>
 
+
         <p>
+
           Download the latest Android version.
+
         </p>
+
 
         <a
           id="bottomDownload"
           class="download-button"
           href="https://github.com/tsvishnunarayanan/Fast-Feed-Releases/releases/latest/download/FastFeed.apk"
         >
-          ↓ Download Fast Feed
+
+          <span class="material-icons-round">
+
+            download
+
+          </span>
+
+          Download Fast Feed
+
         </a>
 
       </div>
@@ -888,21 +2076,39 @@
   </main>
 
 
+  <!-- =======================================================
+       FOOTER
+       ======================================================= -->
+
   <footer>
 
     <div class="container">
 
       <p>
-        <strong>Fast Feed</strong>
+
+        <strong>
+          Fast Feed
+        </strong>
+
         · Vidya ERP Companion
+
       </p>
 
+
       <p>
+
         Created by T S Vishnu Narayanan
+
         ·
-        <a href="mailto:fastfeedsupport@gmail.com">
+
+        <a
+          href="mailto:fastfeedsupport@gmail.com"
+        >
+
           Support
+
         </a>
+
       </p>
 
     </div>
@@ -910,36 +2116,210 @@
   </footer>
 
 
+  <!-- =======================================================
+       SCREENSHOT VIEWER
+       ======================================================= -->
+
+  <div
+    id="lightbox"
+    class="lightbox"
+    aria-hidden="true"
+  >
+
+    <div class="lightbox-toolbar">
+
+
+      <div
+        id="lightboxTitle"
+        class="lightbox-title"
+      >
+
+        Fast Feed Screenshot
+
+      </div>
+
+
+      <div class="lightbox-controls">
+
+
+        <!-- ZOOM OUT -->
+
+        <button
+          id="zoomOut"
+          class="lightbox-button"
+          aria-label="Zoom out"
+          title="Zoom out"
+        >
+
+          <span class="material-icons-round">
+
+            remove
+
+          </span>
+
+        </button>
+
+
+        <span
+          id="zoomValue"
+          class="zoom-value"
+        >
+
+          100%
+
+        </span>
+
+
+        <!-- ZOOM IN -->
+
+        <button
+          id="zoomIn"
+          class="lightbox-button"
+          aria-label="Zoom in"
+          title="Zoom in"
+        >
+
+          <span class="material-icons-round">
+
+            add
+
+          </span>
+
+        </button>
+
+
+        <!-- RESET -->
+
+        <button
+          id="zoomReset"
+          class="lightbox-button"
+          aria-label="Reset zoom"
+          title="Reset zoom"
+        >
+
+          <span class="material-icons-round">
+
+            restart_alt
+
+          </span>
+
+        </button>
+
+
+        <!-- CLOSE -->
+
+        <button
+          id="closeLightbox"
+          class="lightbox-button"
+          aria-label="Close screenshot"
+          title="Close"
+        >
+
+          <span class="material-icons-round">
+
+            close
+
+          </span>
+
+        </button>
+
+
+      </div>
+
+    </div>
+
+
+    <div
+      id="lightboxStage"
+      class="lightbox-stage"
+    >
+
+      <img
+        id="lightboxImage"
+        class="lightbox-image"
+        src=""
+        alt=""
+      >
+
+    </div>
+
+  </div>
+
+
+  <!-- =======================================================
+       JAVASCRIPT
+       ======================================================= -->
+
   <script>
+
+    /* =======================================================
+       THEME
+       ======================================================= */
 
     const body =
       document.body;
 
-    const toggle =
+
+    const themeToggle =
       document.getElementById(
         "themeToggle"
       );
 
 
-    function applyTheme(theme) {
+    const themeColor =
+      document.getElementById(
+        "themeColor"
+      );
+
+
+    function applyTheme(
+      theme,
+      save = true
+    ) {
 
       const dark =
         theme === "dark";
+
 
       body.classList.toggle(
         "dark",
         dark
       );
 
-      toggle.textContent =
-        dark
-          ? "☀"
-          : "☾";
 
-      localStorage.setItem(
-        "fastFeedTheme",
-        theme
+      themeToggle.setAttribute(
+
+        "aria-label",
+
+        dark
+          ? "Switch to light mode"
+          : "Switch to dark mode"
+
       );
+
+
+      themeColor.setAttribute(
+
+        "content",
+
+        dark
+          ? "#101217"
+          : "#2563eb"
+
+      );
+
+
+      if (save) {
+
+        localStorage.setItem(
+
+          "fastFeedTheme",
+
+          theme
+
+        );
+
+      }
 
     }
 
@@ -953,57 +2333,83 @@
     if (savedTheme) {
 
       applyTheme(
-        savedTheme
+        savedTheme,
+        false
       );
 
-    } else {
+    }
 
-      const prefersDark =
+    else {
+
+      const systemDark =
         window.matchMedia(
           "(prefers-color-scheme: dark)"
         ).matches;
 
+
       applyTheme(
-        prefersDark
+
+        systemDark
           ? "dark"
-          : "light"
+          : "light",
+
+        false
+
       );
 
     }
 
 
-    toggle.addEventListener(
+    themeToggle.addEventListener(
+
       "click",
+
       () => {
 
-        applyTheme(
+        const currentlyDark =
           body.classList.contains(
             "dark"
-          )
+          );
+
+
+        applyTheme(
+
+          currentlyDark
             ? "light"
             : "dark"
+
         );
 
       }
+
     );
 
 
-    async function loadVersion() {
+    /* =======================================================
+       VERSION.JSON
+       ======================================================= */
+
+    async function loadVersionInfo() {
 
       try {
 
         const response =
           await fetch(
+
             "version.json?t=" +
             Date.now(),
+
             {
               cache: "no-store"
             }
+
           );
 
 
         if (!response.ok) {
+
           return;
+
         }
 
 
@@ -1013,19 +2419,23 @@
 
         if (data.version) {
 
+          const version =
+            "v" +
+            String(
+              data.version
+            )
+            .replace(
+              /^v/i,
+              ""
+            );
+
+
           document
             .getElementById(
               "versionText"
             )
             .textContent =
-              "v" +
-              String(
-                data.version
-              )
-              .replace(
-                /^v/i,
-                ""
-              );
+              version;
 
         }
 
@@ -1038,6 +2448,7 @@
             )
             .href =
               data.downloadUrl;
+
 
           document
             .getElementById(
@@ -1052,66 +2463,521 @@
         if (
           Array.isArray(
             data.notes
-          ) &&
-          data.notes.length
+          )
+          &&
+          data.notes.length > 0
         ) {
 
-          const list =
+          const releaseNotes =
             document.getElementById(
               "releaseNotes"
             );
 
 
-          list.innerHTML =
+          releaseNotes.innerHTML =
             data.notes
               .map(
+
                 note =>
                   `<li>${escapeHtml(note)}</li>`
+
               )
               .join("");
 
         }
 
-      } catch (_) {}
+      }
+
+      catch (_) {
+
+        /* Website should remain usable
+           even if version.json is unreachable. */
+
+      }
 
     }
 
 
-    function escapeHtml(text) {
+    function escapeHtml(
+      text
+    ) {
 
-      return String(text)
+      return String(
+        text
+      )
 
-        .replaceAll(
-          "&",
-          "&amp;"
-        )
+      .replaceAll(
+        "&",
+        "&amp;"
+      )
 
-        .replaceAll(
-          "<",
-          "&lt;"
-        )
+      .replaceAll(
+        "<",
+        "&lt;"
+      )
 
-        .replaceAll(
-          ">",
-          "&gt;"
-        )
+      .replaceAll(
+        ">",
+        "&gt;"
+      )
 
-        .replaceAll(
-          '"',
-          "&quot;"
-        )
+      .replaceAll(
+        '"',
+        "&quot;"
+      )
 
-        .replaceAll(
-          "'",
-          "&#039;"
-        );
+      .replaceAll(
+        "'",
+        "&#039;"
+      );
 
     }
 
 
-    loadVersion();
+    loadVersionInfo();
+
+
+    /* =======================================================
+       SCREENSHOT LIGHTBOX
+       ======================================================= */
+
+    const lightbox =
+      document.getElementById(
+        "lightbox"
+      );
+
+
+    const lightboxImage =
+      document.getElementById(
+        "lightboxImage"
+      );
+
+
+    const lightboxTitle =
+      document.getElementById(
+        "lightboxTitle"
+      );
+
+
+    const lightboxStage =
+      document.getElementById(
+        "lightboxStage"
+      );
+
+
+    const zoomValue =
+      document.getElementById(
+        "zoomValue"
+      );
+
+
+    const zoomIn =
+      document.getElementById(
+        "zoomIn"
+      );
+
+
+    const zoomOut =
+      document.getElementById(
+        "zoomOut"
+      );
+
+
+    const zoomReset =
+      document.getElementById(
+        "zoomReset"
+      );
+
+
+    const closeLightbox =
+      document.getElementById(
+        "closeLightbox"
+      );
+
+
+    let currentZoom = 1;
+
+
+    const minimumZoom = 0.75;
+
+    const maximumZoom = 3;
+
+
+    function updateZoom() {
+
+      lightboxImage.style.transform =
+        `scale(${currentZoom})`;
+
+
+      zoomValue.textContent =
+        `${Math.round(
+          currentZoom * 100
+        )}%`;
+
+
+      lightboxImage.style.cursor =
+
+        currentZoom < maximumZoom
+
+          ? "zoom-in"
+
+          : "default";
+
+    }
+
+
+    function openScreenshot(
+      image
+    ) {
+
+      currentZoom = 1;
+
+
+      lightboxImage.src =
+        image.src;
+
+
+      lightboxImage.alt =
+        image.alt;
+
+
+      lightboxTitle.textContent =
+        image.alt ||
+        "Fast Feed Screenshot";
+
+
+      lightbox.classList.add(
+        "open"
+      );
+
+
+      lightbox.setAttribute(
+        "aria-hidden",
+        "false"
+      );
+
+
+      body.classList.add(
+        "lightbox-active"
+      );
+
+
+      lightboxStage.scrollTop = 0;
+
+      lightboxStage.scrollLeft = 0;
+
+
+      updateZoom();
+
+    }
+
+
+    function closeScreenshot() {
+
+      lightbox.classList.remove(
+        "open"
+      );
+
+
+      lightbox.setAttribute(
+        "aria-hidden",
+        "true"
+      );
+
+
+      body.classList.remove(
+        "lightbox-active"
+      );
+
+
+      lightboxImage.src = "";
+
+    }
+
+
+    document
+      .querySelectorAll(
+        ".screenshot img"
+      )
+      .forEach(
+
+        image => {
+
+          image.addEventListener(
+
+            "click",
+
+            () => {
+
+              openScreenshot(
+                image
+              );
+
+            }
+
+          );
+
+        }
+
+      );
+
+
+    zoomIn.addEventListener(
+
+      "click",
+
+      () => {
+
+        currentZoom =
+          Math.min(
+
+            maximumZoom,
+
+            currentZoom + 0.25
+
+          );
+
+
+        updateZoom();
+
+      }
+
+    );
+
+
+    zoomOut.addEventListener(
+
+      "click",
+
+      () => {
+
+        currentZoom =
+          Math.max(
+
+            minimumZoom,
+
+            currentZoom - 0.25
+
+          );
+
+
+        updateZoom();
+
+      }
+
+    );
+
+
+    zoomReset.addEventListener(
+
+      "click",
+
+      () => {
+
+        currentZoom = 1;
+
+
+        updateZoom();
+
+
+        lightboxStage.scrollTop = 0;
+
+        lightboxStage.scrollLeft = 0;
+
+      }
+
+    );
+
+
+    closeLightbox.addEventListener(
+
+      "click",
+
+      closeScreenshot
+
+    );
+
+
+    /* Click image:
+       100% → 175% → 100% */
+
+    lightboxImage.addEventListener(
+
+      "click",
+
+      () => {
+
+        currentZoom =
+
+          currentZoom === 1
+
+            ? 1.75
+
+            : 1;
+
+
+        updateZoom();
+
+      }
+
+    );
+
+
+    /* Mouse wheel zoom */
+
+    lightboxStage.addEventListener(
+
+      "wheel",
+
+      event => {
+
+        if (
+          !lightbox.classList.contains(
+            "open"
+          )
+        ) {
+
+          return;
+
+        }
+
+
+        event.preventDefault();
+
+
+        if (event.deltaY < 0) {
+
+          currentZoom =
+            Math.min(
+
+              maximumZoom,
+
+              currentZoom + 0.15
+
+            );
+
+        }
+
+        else {
+
+          currentZoom =
+            Math.max(
+
+              minimumZoom,
+
+              currentZoom - 0.15
+
+            );
+
+        }
+
+
+        updateZoom();
+
+      },
+
+      {
+        passive: false
+      }
+
+    );
+
+
+    /* Click outside image */
+
+    lightboxStage.addEventListener(
+
+      "click",
+
+      event => {
+
+        if (
+          event.target ===
+          lightboxStage
+        ) {
+
+          closeScreenshot();
+
+        }
+
+      }
+
+    );
+
+
+    /* Keyboard controls */
+
+    document.addEventListener(
+
+      "keydown",
+
+      event => {
+
+        if (
+          !lightbox.classList.contains(
+            "open"
+          )
+        ) {
+
+          return;
+
+        }
+
+
+        if (
+          event.key === "Escape"
+        ) {
+
+          closeScreenshot();
+
+        }
+
+
+        if (
+          event.key === "+"
+          ||
+          event.key === "="
+        ) {
+
+          currentZoom =
+            Math.min(
+
+              maximumZoom,
+
+              currentZoom + 0.25
+
+            );
+
+
+          updateZoom();
+
+        }
+
+
+        if (
+          event.key === "-"
+        ) {
+
+          currentZoom =
+            Math.max(
+
+              minimumZoom,
+
+              currentZoom - 0.25
+
+            );
+
+
+          updateZoom();
+
+        }
+
+      }
+
+    );
 
   </script>
 
 </body>
+
 </html>
