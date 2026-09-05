@@ -641,6 +641,9 @@
 
       opacity: 1;
 
+      /* Keep the page visible throughout the switch. */
+      mix-blend-mode: normal;
+
       will-change:
         transform,
         opacity;
@@ -649,8 +652,8 @@
       transform-origin: center;
 
       animation:
-        mobile-theme-expand 620ms
-        cubic-bezier(0.22, 0.80, 0.20, 1)
+        mobile-theme-expand 680ms
+        cubic-bezier(0.16, 1, 0.30, 1)
         forwards;
     }
 
@@ -2169,8 +2172,8 @@
 
           wave.style.background =
             nextTheme === "dark"
-              ? "#101217"
-              : "#f7f9fc";
+              ? "rgba(16, 18, 23, 0.30)"
+              : "rgba(247, 249, 252, 0.28)";
 
           wave.style.setProperty(
             "--mobile-wave-scale",
@@ -2183,6 +2186,13 @@
           );
 
 
+          /*
+            Switch the real theme while the translucent
+            wave is still expanding. Because the overlay
+            is never opaque, the page content stays visible
+            for the entire animation.
+          */
+
           window.setTimeout(
             () => {
 
@@ -2191,7 +2201,7 @@
               );
 
             },
-            520
+            180
           );
 
 
@@ -2203,7 +2213,7 @@
               );
 
             },
-            620
+            520
           );
 
 
@@ -2213,7 +2223,7 @@
               wave.remove();
 
             },
-            820
+            760
           );
 
 
