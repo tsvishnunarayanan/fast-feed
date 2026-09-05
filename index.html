@@ -275,61 +275,42 @@
       z-index: 9999;
     }
 
+    /*
+      Keep the page itself from running its normal colour/background
+      transitions while the View Transition snapshot is animating.
+      This avoids the tiny "catch-up" at the end of the reveal.
+    */
+    html.theme-wave body,
+    html.theme-wave body * {
+      transition: none !important;
+    }
+
     html.theme-wave::view-transition-new(root) {
       animation:
-        theme-wave 1200ms
-        cubic-bezier(0.19, 1, 0.22, 1);
-      will-change: clip-path, opacity, transform;
-      transform: translateZ(0);
+        theme-wave 1050ms
+        cubic-bezier(0.20, 0.78, 0.20, 1);
+      will-change: clip-path;
     }
 
     html.theme-wave::view-transition-old(root) {
-      animation:
-        theme-old-fade 1200ms
-        cubic-bezier(0.19, 1, 0.22, 1);
-      will-change: opacity;
-      transform: translateZ(0);
+      animation: none;
     }
 
     @keyframes theme-wave {
-      0% {
+      from {
         clip-path: circle(
           0px at
           var(--theme-x)
           var(--theme-y)
         );
-        opacity: 0.985;
       }
 
-      22% {
-        opacity: 0.995;
-      }
-
-      58% {
-        opacity: 1;
-      }
-
-      100% {
+      to {
         clip-path: circle(
           var(--theme-radius) at
           var(--theme-x)
           var(--theme-y)
         );
-        opacity: 1;
-      }
-    }
-
-    @keyframes theme-old-fade {
-      0% {
-        opacity: 1;
-      }
-
-      72% {
-        opacity: 0.997;
-      }
-
-      100% {
-        opacity: 0.992;
       }
     }
 
@@ -361,8 +342,8 @@
     }
 
     .hero-logo {
-      width: 125px;
-      height: 125px;
+      width: 140px;
+      height: 140px;
 
       object-fit: contain;
     }
@@ -909,8 +890,8 @@
       }
 
       .hero-logo {
-        width: 107px;
-        height: 107px;
+        width: 120px;
+        height: 120px;
       }
 
       .info-grid {
@@ -1703,7 +1684,7 @@
                 y,
                 window.innerHeight - y
               )
-            );
+            ) * 1.08;
 
 
           document.documentElement.style.setProperty(
