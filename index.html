@@ -304,6 +304,33 @@
       animation: none;
     }
 
+    /*
+      Phones use the exact same circular View Transition as desktop,
+      but with a slightly shorter duration and temporarily reduced
+      rendering cost so it stays smoother.
+    */
+    @media (max-width: 768px), (pointer: coarse) {
+
+      html.theme-wave::view-transition-new(root) {
+        animation-duration: 820ms;
+        animation-timing-function:
+          cubic-bezier(0.18, 0.82, 0.22, 1);
+      }
+
+      html.theme-wave .navbar {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+      }
+
+      html.theme-wave .feature,
+      html.theme-wave .screenshot,
+      html.theme-wave .info-card,
+      html.theme-wave .download-button {
+        box-shadow: none !important;
+      }
+
+    }
+
     @keyframes theme-wave {
       from {
         clip-path: circle(
@@ -614,77 +641,6 @@
         transform: none;
         clip-path: none;
         transition: none;
-      }
-    }
-
-
-    /* =========================================================
-       LIGHTWEIGHT MOBILE THEME WAVE
-       Uses transform/opacity instead of a full-page clipped snapshot.
-       This is much smoother on phones.
-       ========================================================= */
-
-    .mobile-theme-wave {
-      position: fixed;
-      z-index: 999999;
-
-      width: 26px;
-      height: 26px;
-
-      border-radius: 50%;
-
-      pointer-events: none;
-
-      transform:
-        translate(-50%, -50%)
-        scale(0);
-
-      opacity: 1;
-
-      /* Keep the page visible throughout the switch. */
-      mix-blend-mode: normal;
-
-      will-change:
-        transform,
-        opacity;
-
-      backface-visibility: hidden;
-      transform-origin: center;
-
-      animation:
-        mobile-theme-expand 680ms
-        cubic-bezier(0.16, 1, 0.30, 1)
-        forwards;
-    }
-
-    .mobile-theme-wave.fade-out {
-      animation:
-        mobile-theme-fade 180ms
-        ease-out
-        forwards;
-    }
-
-    @keyframes mobile-theme-expand {
-      from {
-        transform:
-          translate(-50%, -50%)
-          scale(0);
-      }
-
-      to {
-        transform:
-          translate(-50%, -50%)
-          scale(var(--mobile-wave-scale));
-      }
-    }
-
-    @keyframes mobile-theme-fade {
-      from {
-        opacity: 1;
-      }
-
-      to {
-        opacity: 0;
       }
     }
 
@@ -2102,139 +2058,7 @@
 
 
         /*
-          Phones use a transform-based circular overlay.
-          It is much cheaper than animating a clipped
-          full-page View Transition snapshot.
-        */
-
-        const useMobileWave =
-          window.matchMedia(
-            "(max-width: 768px), (pointer: coarse)"
-          ).matches;
-
-
-        if (
-          useMobileWave
-          &&
-          !window.matchMedia(
-            "(prefers-reduced-motion: reduce)"
-          ).matches
-        ) {
-
-          const rect =
-            themeToggle.getBoundingClientRect();
-
-          const x =
-            rect.left +
-            rect.width / 2;
-
-          const y =
-            rect.top +
-            rect.height / 2;
-
-
-          const farthestDistance =
-            Math.hypot(
-              Math.max(
-                x,
-                window.innerWidth - x
-              ),
-              Math.max(
-                y,
-                window.innerHeight - y
-              )
-            );
-
-
-          const circleSize = 26;
-
-          const scale =
-            (
-              farthestDistance * 2.12
-            ) / circleSize;
-
-
-          const wave =
-            document.createElement(
-              "div"
-            );
-
-
-          wave.className =
-            "mobile-theme-wave";
-
-
-          wave.style.left =
-            `${x}px`;
-
-          wave.style.top =
-            `${y}px`;
-
-          wave.style.background =
-            nextTheme === "dark"
-              ? "rgba(16, 18, 23, 0.30)"
-              : "rgba(247, 249, 252, 0.28)";
-
-          wave.style.setProperty(
-            "--mobile-wave-scale",
-            scale
-          );
-
-
-          document.body.appendChild(
-            wave
-          );
-
-
-          /*
-            Switch the real theme while the translucent
-            wave is still expanding. Because the overlay
-            is never opaque, the page content stays visible
-            for the entire animation.
-          */
-
-          window.setTimeout(
-            () => {
-
-              applyTheme(
-                nextTheme
-              );
-
-            },
-            180
-          );
-
-
-          window.setTimeout(
-            () => {
-
-              wave.classList.add(
-                "fade-out"
-              );
-
-            },
-            520
-          );
-
-
-          window.setTimeout(
-            () => {
-
-              wave.remove();
-
-            },
-            760
-          );
-
-
-          return;
-
-        }
-
-
-        /*
-          Desktop keeps the richer View Transition
-          circular reveal.
+          Same circular View Transition on both laptop and phone.
         */
 
         if (
@@ -2266,7 +2090,7 @@
                 y,
                 window.innerHeight - y
               )
-            ) * 1.08;
+            ) * 1.04;
 
 
           document.documentElement.style.setProperty(
