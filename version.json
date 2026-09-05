@@ -1,13 +1,8 @@
 {
-  "version": "1.4.0",
+  "version": "1.4.1",
   "downloadUrl": "https://github.com/tsvishnunarayanan/Fast-Feed-Releases/releases/latest/download/FastFeed.apk",
   "notes": [
-    "Feedback Automation",
-    "Marks Archive",
-    "Attendance",
-    "New mark alerts",
-    "Absent-hour alerts",
-    "New onboarding",
-    "UI improvements"
+    "New smooth dark mode animation",
+    "Improved update experience"
   ]
 }
