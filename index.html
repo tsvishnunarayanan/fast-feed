@@ -161,6 +161,12 @@
       margin: 0 auto;
     }
 
+    .container.nav-inner {
+      width: 100%;
+      max-width: none;
+      margin: 0;
+    }
+
 
     /* =========================================================
        NAVIGATION
@@ -185,6 +191,14 @@
 
     .nav-inner {
       min-height: 72px;
+
+      width: 100%;
+      max-width: none;
+
+      margin: 0;
+
+      padding-left: clamp(18px, 3vw, 52px);
+      padding-right: clamp(18px, 3vw, 52px);
 
       display: flex;
       align-items: center;
@@ -1319,6 +1333,11 @@
     }
 
     @media (max-width: 430px) {
+
+      .nav-inner {
+        padding-left: 15px;
+        padding-right: 15px;
+      }
 
       .nav-title {
         font-size: 18px;
