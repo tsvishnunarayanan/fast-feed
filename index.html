@@ -284,13 +284,20 @@
     }
 
     /*
-      Keep the page itself from running its normal colour/background
-      transitions while the View Transition snapshot is animating.
-      This avoids the tiny "catch-up" at the end of the reveal.
+      Freeze all non-theme motion while the View Transition is running.
+      This keeps the circular reveal as the only thing the browser needs
+      to animate and prevents a small catch-up frame at the end.
     */
     html.theme-wave body,
-    html.theme-wave body * {
+    html.theme-wave body *,
+    html.theme-settling body,
+    html.theme-settling body * {
       transition: none !important;
+    }
+
+    html.theme-wave body *,
+    html.theme-settling body * {
+      animation-play-state: paused !important;
     }
 
     html.theme-wave::view-transition-new(root) {
@@ -305,16 +312,27 @@
     }
 
     /*
-      Phones use the exact same circular View Transition as desktop,
-      but with a slightly shorter duration and temporarily reduced
-      rendering cost so it stays smoother.
+      Mobile optimization:
+      same circular reveal, but the expensive decorative effects are frozen
+      only for the few hundred milliseconds while the browser animates the
+      captured theme snapshot.
     */
     @media (max-width: 768px), (pointer: coarse) {
 
       html.theme-wave::view-transition-new(root) {
-        animation-duration: 820ms;
+        animation-duration: 720ms;
         animation-timing-function:
-          cubic-bezier(0.18, 0.82, 0.22, 1);
+          cubic-bezier(0.20, 0.78, 0.20, 1);
+
+        backface-visibility: hidden;
+        transform: translateZ(0);
+        contain: paint;
+      }
+
+      html.theme-wave::view-transition-old(root) {
+        backface-visibility: hidden;
+        transform: translateZ(0);
+        contain: paint;
       }
 
       html.theme-wave .navbar {
@@ -325,8 +343,17 @@
       html.theme-wave .feature,
       html.theme-wave .screenshot,
       html.theme-wave .info-card,
-      html.theme-wave .download-button {
+      html.theme-wave .download-button,
+      html.theme-wave .theme-button,
+      html.theme-wave .viewer-card {
         box-shadow: none !important;
+        filter: none !important;
+      }
+
+      html.theme-wave .hero-logo,
+      html.theme-wave .feature-icon,
+      html.theme-wave .material-icons-round {
+        animation-play-state: paused !important;
       }
 
     }
@@ -2081,16 +2108,18 @@
             rect.height / 2;
 
           const radius =
-            Math.hypot(
-              Math.max(
-                x,
-                window.innerWidth - x
-              ),
-              Math.max(
-                y,
-                window.innerHeight - y
+            Math.ceil(
+              Math.hypot(
+                Math.max(
+                  x,
+                  window.innerWidth - x
+                ),
+                Math.max(
+                  y,
+                  window.innerHeight - y
+                )
               )
-            ) * 1.04;
+            ) + 2;
 
 
           document.documentElement.style.setProperty(
@@ -2128,8 +2157,35 @@
           transition.finished.finally(
             () => {
 
+              /*
+                Keep ordinary CSS transitions frozen for two paint frames
+                after the View Transition disappears. This avoids the tiny
+                final-frame hitch seen on some Android browsers.
+              */
+
+              document.documentElement.classList.add(
+                "theme-settling"
+              );
+
               document.documentElement.classList.remove(
                 "theme-wave"
+              );
+
+
+              requestAnimationFrame(
+                () => {
+
+                  requestAnimationFrame(
+                    () => {
+
+                      document.documentElement.classList.remove(
+                        "theme-settling"
+                      );
+
+                    }
+                  );
+
+                }
               );
 
             }
@@ -2281,6 +2337,15 @@
 
       scrollFrameRequested =
         false;
+
+
+      if (
+        document.documentElement.classList.contains(
+          "theme-wave"
+        )
+      ) {
+        return;
+      }
 
 
       const scrollY =
