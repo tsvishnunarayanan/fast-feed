@@ -1,8 +1,10 @@
 {
-  "version": "1.4.1",
+  "version": "1.4.2",
   "downloadUrl": "https://github.com/tsvishnunarayanan/Fast-Feed-Releases/releases/latest/download/FastFeed.apk",
   "notes": [
-    "New smooth dark mode animation",
-    "Improved update popup"
-  ]
+    "Smarter in-app update system",
+    "Prepared for smaller future updates",
+    "Theme animation improvements"
+  ],
+  "patches": []
 }
