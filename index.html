@@ -284,20 +284,12 @@
     }
 
     /*
-      Freeze all non-theme motion while the View Transition is running.
-      This keeps the circular reveal as the only thing the browser needs
-      to animate and prevents a small catch-up frame at the end.
+      During the desktop View Transition, stop ordinary CSS colour
+      transitions from competing with the circular reveal.
     */
     html.theme-wave body,
-    html.theme-wave body *,
-    html.theme-settling body,
-    html.theme-settling body * {
+    html.theme-wave body * {
       transition: none !important;
-    }
-
-    html.theme-wave body *,
-    html.theme-settling body * {
-      animation-play-state: paused !important;
     }
 
     html.theme-wave::view-transition-new(root) {
@@ -309,53 +301,6 @@
 
     html.theme-wave::view-transition-old(root) {
       animation: none;
-    }
-
-    /*
-      Mobile optimization:
-      same circular reveal, but the expensive decorative effects are frozen
-      only for the few hundred milliseconds while the browser animates the
-      captured theme snapshot.
-    */
-    @media (max-width: 768px), (pointer: coarse) {
-
-      html.theme-wave::view-transition-new(root) {
-        animation-duration: 720ms;
-        animation-timing-function:
-          cubic-bezier(0.20, 0.78, 0.20, 1);
-
-        backface-visibility: hidden;
-        transform: translateZ(0);
-        contain: paint;
-      }
-
-      html.theme-wave::view-transition-old(root) {
-        backface-visibility: hidden;
-        transform: translateZ(0);
-        contain: paint;
-      }
-
-      html.theme-wave .navbar {
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-      }
-
-      html.theme-wave .feature,
-      html.theme-wave .screenshot,
-      html.theme-wave .info-card,
-      html.theme-wave .download-button,
-      html.theme-wave .theme-button,
-      html.theme-wave .viewer-card {
-        box-shadow: none !important;
-        filter: none !important;
-      }
-
-      html.theme-wave .hero-logo,
-      html.theme-wave .feature-icon,
-      html.theme-wave .material-icons-round {
-        animation-play-state: paused !important;
-      }
-
     }
 
     @keyframes theme-wave {
@@ -668,6 +613,43 @@
         transform: none;
         clip-path: none;
         transition: none;
+      }
+    }
+
+
+    /* =========================================================
+       SIMPLE MOBILE THEME TRANSITION
+       Phones use a lightweight fade instead of the expensive
+       full-page circular View Transition.
+       ========================================================= */
+
+    html.mobile-theme-fade body {
+      animation:
+        mobile-theme-fade 360ms
+        cubic-bezier(0.22, 0.72, 0.26, 1);
+    }
+
+    @keyframes mobile-theme-fade {
+      0% {
+        opacity: 1;
+      }
+
+      44% {
+        opacity: 0.86;
+      }
+
+      56% {
+        opacity: 0.86;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html.mobile-theme-fade body {
+        animation: none;
       }
     }
 
@@ -2084,8 +2066,69 @@
             : "dark";
 
 
+        const isPhone =
+          window.matchMedia(
+            "(max-width: 768px), (pointer: coarse)"
+          ).matches;
+
+
         /*
-          Same circular View Transition on both laptop and phone.
+          PHONE:
+          simple opacity fade. No View Transition snapshot,
+          no clip-path animation, and no full-screen overlay.
+        */
+
+        if (
+          isPhone
+          &&
+          !window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+          ).matches
+        ) {
+
+          document.documentElement.classList.remove(
+            "mobile-theme-fade"
+          );
+
+          void document.documentElement.offsetWidth;
+
+          document.documentElement.classList.add(
+            "mobile-theme-fade"
+          );
+
+
+          window.setTimeout(
+            () => {
+
+              applyTheme(
+                nextTheme
+              );
+
+            },
+            160
+          );
+
+
+          window.setTimeout(
+            () => {
+
+              document.documentElement.classList.remove(
+                "mobile-theme-fade"
+              );
+
+            },
+            390
+          );
+
+
+          return;
+
+        }
+
+
+        /*
+          LAPTOP / DESKTOP:
+          keep the smooth circular wave reveal.
         */
 
         if (
@@ -2108,18 +2151,16 @@
             rect.height / 2;
 
           const radius =
-            Math.ceil(
-              Math.hypot(
-                Math.max(
-                  x,
-                  window.innerWidth - x
-                ),
-                Math.max(
-                  y,
-                  window.innerHeight - y
-                )
+            Math.hypot(
+              Math.max(
+                x,
+                window.innerWidth - x
+              ),
+              Math.max(
+                y,
+                window.innerHeight - y
               )
-            ) + 2;
+            ) * 1.08;
 
 
           document.documentElement.style.setProperty(
@@ -2157,35 +2198,8 @@
           transition.finished.finally(
             () => {
 
-              /*
-                Keep ordinary CSS transitions frozen for two paint frames
-                after the View Transition disappears. This avoids the tiny
-                final-frame hitch seen on some Android browsers.
-              */
-
-              document.documentElement.classList.add(
-                "theme-settling"
-              );
-
               document.documentElement.classList.remove(
                 "theme-wave"
-              );
-
-
-              requestAnimationFrame(
-                () => {
-
-                  requestAnimationFrame(
-                    () => {
-
-                      document.documentElement.classList.remove(
-                        "theme-settling"
-                      );
-
-                    }
-                  );
-
-                }
               );
 
             }
