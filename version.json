@@ -1,16 +1,17 @@
 {
-  "version": "1.4.3",
+  "version": "1.4.4",
   "downloadUrl": "https://github.com/tsvishnunarayanan/Fast-Feed-Releases/releases/latest/download/FastFeed.apk",
-  "fullSizeBytes": 65328686,
+  "fullSizeBytes": 65410890,
   "notes": [
-    "Smaller delta updates are now active",
-    "Improved in-app update delivery"
+    "Added a Rate Fast Feed option in Settings",
+    "Added the Fast Feed website in Settings",
+    "Future update checks now use the new Fast Feed website"
   ],
   "patches": [
     {
-      "from": "1.4.2",
-      "url": "https://github.com/tsvishnunarayanan/Fast-Feed-Releases/releases/download/v1.4.3/FastFeed-1.4.2-to-1.4.3.patch",
-      "sizeBytes": 138558
+      "from": "1.4.3",
+      "url": "https://github.com/tsvishnunarayanan/Fast-Feed-Releases/releases/download/v1.4.4/FastFeed-1.4.3-to-1.4.4.patch",
+      "sizeBytes": 2493263
     }
   ]
 }
