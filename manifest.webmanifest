@@ -1,0 +1,15 @@
+{
+  "name": "Fast Feed",
+  "short_name": "Fast Feed",
+  "start_url": "/",
+  "scope": "/",
+  "display": "browser",
+  "background_color": "#101217",
+  "theme_color": "#101217",
+  "related_applications": [
+    {
+      "platform": "play",
+      "id": "com.tsvishnu.fastfeed"
+    }
+  ]
+}
