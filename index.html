@@ -1120,6 +1120,7 @@
       isolation: isolate;
       width: 76px;
       height: 76px;
+      margin-bottom: 18px;
       display: grid;
       place-items: center;
       border-radius: 50%;
@@ -1129,33 +1130,17 @@
       transform: scale(0);
     }
 
-    /* Animated green rays bursting out from the success circle. */
+    /* Rounded green rays. The SVG uses round line caps so the ray ends are soft,
+       and the smaller spread keeps them clear of the Thank you text below. */
     .rating-success-tick::before {
       content: "";
       position: absolute;
-      inset: -34px;
+      inset: -20px;
       z-index: -1;
-      border-radius: 50%;
-      background:
-        repeating-conic-gradient(
-          from -2deg,
-          rgba(34, 197, 94, 0.95) 0deg 4deg,
-          transparent 4deg 30deg
-        );
-      -webkit-mask:
-        radial-gradient(
-          circle,
-          transparent 0 55%,
-          #000 56% 69%,
-          transparent 70%
-        );
-      mask:
-        radial-gradient(
-          circle,
-          transparent 0 55%,
-          #000 56% 69%,
-          transparent 70%
-        );
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cg stroke='%2322c55e' stroke-width='5' stroke-linecap='round' opacity='.95'%3E%3Cline x1='60' y1='5' x2='60' y2='17'/%3E%3Cline x1='60' y1='5' x2='60' y2='17' transform='rotate(30 60 60)'/%3E%3Cline x1='60' y1='5' x2='60' y2='17' transform='rotate(60 60 60)'/%3E%3Cline x1='60' y1='5' x2='60' y2='17' transform='rotate(90 60 60)'/%3E%3Cline x1='60' y1='5' x2='60' y2='17' transform='rotate(120 60 60)'/%3E%3Cline x1='60' y1='5' x2='60' y2='17' transform='rotate(150 60 60)'/%3E%3Cline x1='60' y1='5' x2='60' y2='17' transform='rotate(180 60 60)'/%3E%3Cline x1='60' y1='5' x2='60' y2='17' transform='rotate(210 60 60)'/%3E%3Cline x1='60' y1='5' x2='60' y2='17' transform='rotate(240 60 60)'/%3E%3Cline x1='60' y1='5' x2='60' y2='17' transform='rotate(270 60 60)'/%3E%3Cline x1='60' y1='5' x2='60' y2='17' transform='rotate(300 60 60)'/%3E%3Cline x1='60' y1='5' x2='60' y2='17' transform='rotate(330 60 60)'/%3E%3C/g%3E%3C/svg%3E");
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
       opacity: 0;
       transform: scale(0.55) rotate(-10deg);
       pointer-events: none;
@@ -1197,6 +1182,8 @@
     }
 
     .rating-success-title {
+      position: relative;
+      z-index: 2;
       margin: 2px 0 0;
       font-size: 24px;
       font-weight: 900;
@@ -1210,6 +1197,8 @@
     }
 
     .rating-success-text {
+      position: relative;
+      z-index: 2;
       color: var(--muted);
       font-size: 13px;
       text-align: center;
@@ -1806,6 +1795,25 @@
     }
 
     @media (max-width: 430px) {
+
+      /* Keep all five rating stars fully visible on narrow phones. */
+      .star-picker {
+        width: 100%;
+        gap: 0;
+        justify-content: space-between;
+      }
+
+      .star-button {
+        flex: 1 1 0;
+        min-width: 0;
+        padding: 2px 0;
+        display: flex;
+        justify-content: center;
+      }
+
+      .star-button .material-icons-round {
+        font-size: clamp(31px, 9vw, 38px);
+      }
 
       .nav-inner {
         padding-left: 15px;
