@@ -1080,6 +1080,14 @@
       align-items: stretch;
     }
 
+    .ratings-top.form-hidden {
+      grid-template-columns: 1fr;
+    }
+
+    .rating-form-card.is-hidden {
+      display: none;
+    }
+
     .rating-summary,
     .rating-form-card,
     .reviews-card {
@@ -2106,7 +2114,7 @@
 
         <div class="ratings-wrap">
 
-          <div class="ratings-top">
+          <div class="ratings-top form-hidden" id="ratingsTop">
 
             <div class="rating-summary">
 
@@ -2184,7 +2192,7 @@
             </div>
 
 
-            <div class="rating-form-card">
+            <div class="rating-form-card is-hidden" id="ratingFormCard">
 
               <h3>
                 Rate Fast Feed
@@ -3234,6 +3242,16 @@
         "reviewText"
       );
 
+    const ratingFormCard =
+      document.getElementById(
+        "ratingFormCard"
+      );
+
+    const ratingsTop =
+      document.getElementById(
+        "ratingsTop"
+      );
+
 
     function setRatingFormLocked(
       locked
@@ -3251,13 +3269,15 @@
       reviewText.disabled = locked;
       submitReview.disabled = locked;
 
-      if (locked) {
-        reviewMessage.textContent =
-          "You have already rated Fast Feed.";
+      ratingFormCard.classList.toggle(
+        "is-hidden",
+        locked
+      );
 
-        reviewMessage.className =
-          "review-message success";
-      }
+      ratingsTop.classList.toggle(
+        "form-hidden",
+        locked
+      );
     }
 
 
@@ -3646,6 +3666,10 @@
 
       catch (_) {
 
+        if (!hasAlreadyRated) {
+          setRatingFormLocked(false);
+        }
+
         document
           .getElementById(
             "reviewsList"
@@ -3759,6 +3783,8 @@
 
           reviewMessage.className =
             "review-message success";
+
+          setRatingFormLocked(true);
 
           reviewName.value = "";
           reviewText.value = "";
