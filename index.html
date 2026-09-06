@@ -1088,6 +1088,117 @@
       display: none;
     }
 
+    .rating-form-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .rating-success {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 24px;
+      background: var(--surface);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: scale(0.98);
+    }
+
+    .rating-form-card.show-success .rating-success {
+      visibility: visible;
+      animation: ratingSuccessFade 0.28s ease forwards;
+    }
+
+    .rating-success-tick {
+      width: 76px;
+      height: 76px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #22c55e;
+      color: #ffffff;
+      box-shadow: 0 12px 30px rgba(34, 197, 94, 0.28);
+      transform: scale(0);
+    }
+
+    .rating-form-card.show-success .rating-success-tick {
+      animation: ratingTickPop 0.5s cubic-bezier(0.2, 0.9, 0.2, 1.25) 0.08s forwards;
+    }
+
+    .rating-success-tick .material-icons-round {
+      font-size: 48px;
+      font-weight: 900;
+      transform: scale(0);
+    }
+
+    .rating-form-card.show-success .rating-success-tick .material-icons-round {
+      animation: ratingCheckPop 0.28s ease 0.34s forwards;
+    }
+
+    .rating-success-title {
+      margin: 2px 0 0;
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--text);
+      opacity: 0;
+      transform: translateY(8px);
+    }
+
+    .rating-form-card.show-success .rating-success-title {
+      animation: ratingTextIn 0.35s ease 0.38s forwards;
+    }
+
+    .rating-success-text {
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(8px);
+    }
+
+    .rating-form-card.show-success .rating-success-text {
+      animation: ratingTextIn 0.35s ease 0.48s forwards;
+    }
+
+    @keyframes ratingSuccessFade {
+      from {
+        opacity: 0;
+        transform: scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes ratingTickPop {
+      0% { transform: scale(0); }
+      70% { transform: scale(1.12); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes ratingCheckPop {
+      from { transform: scale(0); }
+      to { transform: scale(1); }
+    }
+
+    @keyframes ratingTextIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     .rating-summary,
     .rating-form-card,
     .reviews-card {
@@ -2289,6 +2400,27 @@
 
               </form>
 
+              <div
+                id="ratingSuccess"
+                class="rating-success"
+                aria-live="polite"
+                aria-hidden="true"
+              >
+
+                <div class="rating-success-tick">
+                  <span class="material-icons-round">check</span>
+                </div>
+
+                <div class="rating-success-title">
+                  Thank you!
+                </div>
+
+                <div class="rating-success-text">
+                  Your rating has been submitted.
+                </div>
+
+              </div>
+
             </div>
 
           </div>
@@ -3252,6 +3384,11 @@
         "ratingsTop"
       );
 
+    const ratingSuccess =
+      document.getElementById(
+        "ratingSuccess"
+      );
+
 
     function setRatingFormLocked(
       locked
@@ -3277,6 +3414,38 @@
       ratingsTop.classList.toggle(
         "form-hidden",
         locked
+      );
+    }
+
+
+    function showRatingSuccess() {
+
+      hasAlreadyRated = true;
+
+      starButtons.forEach(
+        button => {
+          button.disabled = true;
+        }
+      );
+
+      reviewName.disabled = true;
+      reviewText.disabled = true;
+      submitReview.disabled = true;
+
+      ratingSuccess.setAttribute(
+        "aria-hidden",
+        "false"
+      );
+
+      ratingFormCard.classList.add(
+        "show-success"
+      );
+    }
+
+
+    function wait(ms) {
+      return new Promise(
+        resolve => setTimeout(resolve, ms)
       );
     }
 
@@ -3777,15 +3946,6 @@
           }
 
 
-          reviewMessage.textContent =
-            data.message ||
-            "Thanks for rating Fast Feed!";
-
-          reviewMessage.className =
-            "review-message success";
-
-          setRatingFormLocked(true);
-
           reviewName.value = "";
           reviewText.value = "";
 
@@ -3795,6 +3955,21 @@
             0,
             false
           );
+
+          showRatingSuccess();
+
+          await wait(1900);
+
+          ratingFormCard.classList.remove(
+            "show-success"
+          );
+
+          ratingSuccess.setAttribute(
+            "aria-hidden",
+            "true"
+          );
+
+          setRatingFormLocked(true);
 
           await loadRatings();
 
