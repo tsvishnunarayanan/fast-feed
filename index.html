@@ -1512,6 +1512,30 @@
       font-size: 14px;
     }
 
+    .review-extra {
+      display: none;
+    }
+
+    .reviews-list.expanded .review-extra {
+      display: block;
+    }
+
+    .reviews-toggle {
+      display: none;
+      margin: 16px auto 0;
+      padding: 9px 18px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--surface-soft);
+      color: var(--text);
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .reviews-toggle.visible {
+      display: block;
+    }
+
 
     /* =========================================================
        BOTTOM DOWNLOAD
@@ -2535,6 +2559,14 @@
               </p>
 
             </div>
+
+            <button
+              id="reviewsToggle"
+              class="reviews-toggle"
+              type="button"
+            >
+              Show more
+            </button>
 
           </div>
 
@@ -3771,6 +3803,20 @@
         );
 
       reviewsList.innerHTML = "";
+      reviewsList.classList.remove(
+        "expanded"
+      );
+
+      const reviewsToggle =
+        document.getElementById(
+          "reviewsToggle"
+        );
+
+      reviewsToggle.classList.remove(
+        "visible"
+      );
+      reviewsToggle.textContent =
+        "Show more";
 
       const reviews =
         Array.isArray(data.reviews)
@@ -3797,7 +3843,7 @@
 
 
       reviews.forEach(
-        review => {
+        (review, index) => {
 
           const item =
             document.createElement(
@@ -3806,6 +3852,12 @@
 
           item.className =
             "review-item";
+
+          if (index >= 5) {
+            item.classList.add(
+              "review-extra"
+            );
+          }
 
 
           const head =
@@ -3892,7 +3944,38 @@
         }
       );
 
+      if (reviews.length > 5) {
+        reviewsToggle.classList.add(
+          "visible"
+        );
+      }
+
     }
+
+
+    document
+      .getElementById(
+        "reviewsToggle"
+      )
+      .addEventListener(
+        "click",
+        event => {
+          const reviewsList =
+            document.getElementById(
+              "reviewsList"
+            );
+
+          const expanded =
+            reviewsList.classList.toggle(
+              "expanded"
+            );
+
+          event.currentTarget.textContent =
+            expanded
+              ? "Show less"
+              : "Show more";
+        }
+      );
 
 
     async function loadRatings() {
