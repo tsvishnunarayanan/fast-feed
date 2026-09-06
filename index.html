@@ -27,6 +27,73 @@
     id="themeColor"
   >
 
+
+  <link
+    rel="canonical"
+    href="https://fast-feed.pages.dev/"
+  >
+
+  <link
+    rel="icon"
+    type="image/png"
+    href="assets/logo-blue.png"
+  >
+
+  <link
+    rel="apple-touch-icon"
+    href="assets/logo-blue.png"
+  >
+
+  <meta
+    name="application-name"
+    content="Fast Feed"
+  >
+
+  <meta
+    name="apple-mobile-web-app-title"
+    content="Fast Feed"
+  >
+
+  <meta
+    property="og:type"
+    content="website"
+  >
+
+  <meta
+    property="og:site_name"
+    content="Fast Feed"
+  >
+
+  <meta
+    property="og:title"
+    content="Fast Feed - Vidya ERP Companion"
+  >
+
+  <meta
+    property="og:description"
+    content="Feedback automation, marks archive, attendance and useful alerts for Vidya ERP students."
+  >
+
+  <meta
+    property="og:url"
+    content="https://fast-feed.pages.dev/"
+  >
+
+  <meta
+    property="og:image"
+    content="https://fast-feed.pages.dev/assets/logo-blue.png"
+  >
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Fast Feed",
+    "alternateName": "Fast Feed - Vidya ERP Companion",
+    "url": "https://fast-feed.pages.dev/"
+  }
+  </script>
+
   <link
     rel="preconnect"
     href="https://fonts.googleapis.com"
@@ -1507,6 +1574,17 @@
 
         </a>
 
+        <p
+          style="
+            margin-top: 12px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.5;
+          "
+        >
+          New to Fast Feed? Install the latest Android release here.
+        </p>
+
 
         <p class="version">
 
@@ -1775,30 +1853,25 @@
         <div class="info-card">
 
           <h3>
-            Install Fast Feed
+            Already using Fast Feed?
           </h3>
 
           <ul class="list">
 
             <li>
-              <strong>1.</strong>
-              Download FastFeed.apk
+              Fast Feed checks for new versions inside the app.
             </li>
 
             <li>
-              <strong>2.</strong>
-              Allow installation from your browser if
-              Android asks.
+              When an update is available, the app shows an update popup.
             </li>
 
             <li>
-              <strong>3.</strong>
-              Install and open Fast Feed.
+              Small updates are downloaded and prepared by Fast Feed itself.
             </li>
 
             <li>
-              <strong>4.</strong>
-              Login using your Vidya ERP account.
+              You only need to confirm the final Android update installation.
             </li>
 
           </ul>
@@ -1812,7 +1885,7 @@
 
 
     <!-- =====================================================
-         DOWNLOAD
+         UPDATES
          ===================================================== -->
 
     <section class="bottom-download">
@@ -1820,26 +1893,12 @@
       <div class="container">
 
         <h2>
-          Ready to use Fast Feed?
+          Already have Fast Feed?
         </h2>
 
         <p>
-          Download the latest Android release.
+          Open the app normally. Fast Feed will let you know when an update is available.
         </p>
-
-        <a
-          id="bottomDownload"
-          class="download-button"
-          href="https://github.com/tsvishnunarayanan/Fast-Feed-Releases/releases/latest/download/FastFeed.apk"
-        >
-
-          <span class="material-icons-round">
-            download
-          </span>
-
-          Download Fast Feed
-
-        </a>
 
       </div>
 
@@ -2580,12 +2639,6 @@
 
           document
             .getElementById("heroDownload")
-            .href =
-              data.downloadUrl;
-
-
-          document
-            .getElementById("bottomDownload")
             .href =
               data.downloadUrl;
 
