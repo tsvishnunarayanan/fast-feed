@@ -16,6 +16,14 @@ export async function onRequestGet(context) {
   try {
     const db = context.env.DB;
 
+    const url =
+      new URL(context.request.url);
+
+    const voterId =
+      (url.searchParams.get("voterId") || "")
+        .trim();
+
+
     const summary = await db.prepare(`
       SELECT
         COUNT(*) AS total,
@@ -24,14 +32,15 @@ export async function onRequestGet(context) {
     `).first();
 
 
-    const distributionRows = await db.prepare(`
-      SELECT
-        rating,
-        COUNT(*) AS count
-      FROM reviews
-      GROUP BY rating
-      ORDER BY rating DESC
-    `).all();
+    const distributionRows =
+      await db.prepare(`
+        SELECT
+          rating,
+          COUNT(*) AS count
+        FROM reviews
+        GROUP BY rating
+        ORDER BY rating DESC
+      `).all();
 
 
     const distribution = {
@@ -53,20 +62,41 @@ export async function onRequestGet(context) {
     }
 
 
-    const reviewsResult = await db.prepare(`
-      SELECT
-        id,
-        name,
-        rating,
-        review,
-        created_at
-      FROM reviews
-      WHERE
-        review IS NOT NULL
-        AND TRIM(review) != ''
-      ORDER BY id DESC
-      LIMIT 30
-    `).all();
+    const reviewsResult =
+      await db.prepare(`
+        SELECT
+          id,
+          name,
+          rating,
+          review,
+          created_at
+        FROM reviews
+        WHERE
+          review IS NOT NULL
+          AND TRIM(review) != ''
+        ORDER BY id DESC
+        LIMIT 30
+      `).all();
+
+
+    let alreadyRated = false;
+
+
+    if (voterId) {
+      const existing =
+        await db.prepare(`
+          SELECT id
+          FROM reviews
+          WHERE voter_id = ?
+          LIMIT 1
+        `)
+          .bind(voterId)
+          .first();
+
+
+      alreadyRated =
+        !!existing;
+    }
 
 
     return json({
@@ -80,10 +110,11 @@ export async function onRequestGet(context) {
 
       distribution,
 
+      alreadyRated,
+
       reviews:
         reviewsResult.results || []
     });
-
   }
 
   catch (error) {
@@ -104,6 +135,7 @@ export async function onRequestPost(context) {
 
     let body;
 
+
     try {
       body =
         await context.request.json();
@@ -123,15 +155,37 @@ export async function onRequestPost(context) {
     const rating =
       Number(body.rating);
 
+
+    const voterId =
+      String(
+        body.voterId || ""
+      ).trim();
+
+
     let name =
       String(
         body.name || ""
       ).trim();
 
+
     let review =
       String(
         body.review || ""
       ).trim();
+
+
+    if (
+      !voterId ||
+      voterId.length > 100
+    ) {
+      return json(
+        {
+          success: false,
+          error: "Invalid voter."
+        },
+        400
+      );
+    }
 
 
     if (
@@ -171,25 +225,72 @@ export async function onRequestPost(context) {
     }
 
 
-    if (!name) {
-      name = "Anonymous";
+    const existing =
+      await db.prepare(`
+        SELECT id
+        FROM reviews
+        WHERE voter_id = ?
+        LIMIT 1
+      `)
+        .bind(voterId)
+        .first();
+
+
+    if (existing) {
+      return json(
+        {
+          success: false,
+          alreadyRated: true,
+          error: "You have already rated Fast Feed."
+        },
+        409
+      );
     }
 
 
-    await db.prepare(`
-      INSERT INTO reviews (
-        name,
-        rating,
-        review
-      )
-      VALUES (?, ?, ?)
-    `)
-      .bind(
-        name,
-        rating,
-        review
-      )
-      .run();
+    if (!name) {
+      name =
+        "Anonymous";
+    }
+
+
+    try {
+      await db.prepare(`
+        INSERT INTO reviews (
+          voter_id,
+          name,
+          rating,
+          review
+        )
+        VALUES (?, ?, ?, ?)
+      `)
+        .bind(
+          voterId,
+          name,
+          rating,
+          review
+        )
+        .run();
+    }
+
+    catch (error) {
+      if (
+        String(error)
+          .toLowerCase()
+          .includes("unique")
+      ) {
+        return json(
+          {
+            success: false,
+            alreadyRated: true,
+            error: "You have already rated Fast Feed."
+          },
+          409
+        );
+      }
+
+      throw error;
+    }
 
 
     return json(
@@ -199,7 +300,6 @@ export async function onRequestPost(context) {
       },
       201
     );
-
   }
 
   catch (error) {
