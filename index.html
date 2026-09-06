@@ -3152,6 +3152,55 @@
        ======================================================= */
 
     let selectedRating = 0;
+    let hasAlreadyRated = false;
+
+
+    function getVoterId() {
+
+      const storageKey =
+        "fastFeedVoterId";
+
+      let id =
+        localStorage.getItem(
+          storageKey
+        );
+
+      if (!id) {
+
+        if (
+          window.crypto &&
+          typeof crypto.randomUUID ===
+            "function"
+        ) {
+          id = crypto.randomUUID();
+        }
+
+        else {
+          id =
+            "ff-" +
+            Date.now().toString(36) +
+            "-" +
+            Math.random()
+              .toString(36)
+              .slice(2) +
+            Math.random()
+              .toString(36)
+              .slice(2);
+        }
+
+        localStorage.setItem(
+          storageKey,
+          id
+        );
+      }
+
+      return id;
+    }
+
+
+    const voterId =
+      getVoterId();
+
 
     const starButtons =
       Array.from(
@@ -3174,6 +3223,42 @@
       document.getElementById(
         "submitReview"
       );
+
+    const reviewName =
+      document.getElementById(
+        "reviewName"
+      );
+
+    const reviewText =
+      document.getElementById(
+        "reviewText"
+      );
+
+
+    function setRatingFormLocked(
+      locked
+    ) {
+
+      hasAlreadyRated = locked;
+
+      starButtons.forEach(
+        button => {
+          button.disabled = locked;
+        }
+      );
+
+      reviewName.disabled = locked;
+      reviewText.disabled = locked;
+      submitReview.disabled = locked;
+
+      if (locked) {
+        reviewMessage.textContent =
+          "You have already rated Fast Feed.";
+
+        reviewMessage.className =
+          "review-message success";
+      }
+    }
 
 
     function paintStars(
@@ -3215,23 +3300,37 @@
 
         button.addEventListener(
           "mouseenter",
-          () => paintStars(
-            value,
-            true
-          )
+          () => {
+
+            if (!hasAlreadyRated) {
+              paintStars(
+                value,
+                true
+              );
+            }
+          }
         );
 
         button.addEventListener(
           "mouseleave",
-          () => paintStars(
-            selectedRating,
-            false
-          )
+          () => {
+
+            if (!hasAlreadyRated) {
+              paintStars(
+                selectedRating,
+                false
+              );
+            }
+          }
         );
 
         button.addEventListener(
           "click",
           () => {
+
+            if (hasAlreadyRated) {
+              return;
+            }
 
             selectedRating = value;
 
@@ -3379,6 +3478,11 @@
       }
 
 
+      setRatingFormLocked(
+        data.alreadyRated === true
+      );
+
+
       const reviewsList =
         document.getElementById(
           "reviewsList"
@@ -3515,7 +3619,11 @@
 
         const response =
           await fetch(
-            "/api/reviews?t=" +
+            "/api/reviews?voterId=" +
+            encodeURIComponent(
+              voterId
+            ) +
+            "&t=" +
             Date.now(),
             {
               cache: "no-store"
@@ -3543,7 +3651,7 @@
             "reviewsList"
           )
           .innerHTML =
-            '<p class="reviews-empty">No reviews yet.</p>';
+            '<p class="reviews-empty">Could not load ratings right now.</p>';
 
       }
 
@@ -3555,6 +3663,17 @@
       async event => {
 
         event.preventDefault();
+
+        if (hasAlreadyRated) {
+
+          reviewMessage.textContent =
+            "You have already rated Fast Feed.";
+
+          reviewMessage.className =
+            "review-message success";
+
+          return;
+        }
 
         if (!selectedRating) {
 
@@ -3569,20 +3688,10 @@
 
 
         const name =
-          document
-            .getElementById(
-              "reviewName"
-            )
-            .value
-            .trim();
+          reviewName.value.trim();
 
         const review =
-          document
-            .getElementById(
-              "reviewText"
-            )
-            .value
-            .trim();
+          reviewText.value.trim();
 
 
         submitReview.disabled = true;
@@ -3609,6 +3718,7 @@
                 },
                 body: JSON.stringify(
                   {
+                    voterId,
                     name,
                     rating: selectedRating,
                     review
@@ -3619,6 +3729,18 @@
 
           const data =
             await response.json();
+
+          if (
+            response.status === 409 ||
+            data.alreadyRated === true
+          ) {
+
+            setRatingFormLocked(true);
+
+            throw new Error(
+              "You have already rated Fast Feed."
+            );
+          }
 
           if (
             !response.ok ||
@@ -3638,17 +3760,8 @@
           reviewMessage.className =
             "review-message success";
 
-          document
-            .getElementById(
-              "reviewName"
-            )
-            .value = "";
-
-          document
-            .getElementById(
-              "reviewText"
-            )
-            .value = "";
+          reviewName.value = "";
+          reviewText.value = "";
 
           selectedRating = 0;
 
@@ -3668,13 +3781,18 @@
             "Could not submit review.";
 
           reviewMessage.className =
-            "review-message error";
+            hasAlreadyRated
+              ? "review-message success"
+              : "review-message error";
 
         }
 
         finally {
 
-          submitReview.disabled = false;
+          if (!hasAlreadyRated) {
+            submitReview.disabled = false;
+          }
+
           submitReview.textContent =
             "Submit";
 
