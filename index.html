@@ -33,6 +33,8 @@
     href="https://fast-feed.pages.dev/"
   >
 
+  <link rel="manifest" href="manifest.webmanifest">
+
   <link
     rel="icon"
     type="image/png"
@@ -887,6 +889,41 @@
     }
 
 
+    .app-smart-status {
+      width: min(560px, 100%);
+      margin: 13px auto 0;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 650;
+      line-height: 1.5;
+    }
+
+    .app-smart-status strong {
+      color: var(--text);
+    }
+
+    .download-button.update-ready {
+      box-shadow:
+        0 0 0 1px rgba(37, 99, 235, 0.16),
+        var(--shadow);
+    }
+
+    .download-button.open-app {
+      background: var(--surface-strong);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    body.dark .download-button.open-app {
+      color: var(--text);
+    }
+
+    .download-button.detecting {
+      opacity: 0.72;
+      pointer-events: none;
+    }
+
+
     /* =========================================================
        SECTIONS
        ========================================================= */
@@ -1562,27 +1599,30 @@
 
         <a
           id="heroDownload"
-          class="download-button"
-          href="https://github.com/tsvishnunarayanan/Fast-Feed-Releases/releases/latest/download/FastFeed.apk"
+          class="download-button detecting"
+          href="#"
+          aria-disabled="true"
         >
 
-          <span class="material-icons-round">
-            download
+          <span
+            id="heroActionIcon"
+            class="material-icons-round"
+          >
+            hourglass_top
           </span>
 
-          Download for Android
+          <span id="heroActionText">
+            Checking Fast Feed…
+          </span>
 
         </a>
 
         <p
-          style="
-            margin-top: 12px;
-            color: var(--muted);
-            font-size: 13px;
-            line-height: 1.5;
-          "
+          id="heroAppStatus"
+          class="app-smart-status"
+          aria-live="polite"
         >
-          New to Fast Feed? Install the latest Android release here.
+          Checking this device…
         </p>
 
 
@@ -1852,26 +1892,17 @@
 
         <div class="info-card">
 
-          <h3>
-            Already using Fast Feed?
+          <h3 id="appStatusCardTitle">
+            Fast Feed on this device
           </h3>
 
-          <ul class="list">
+          <ul
+            id="appStatusCardList"
+            class="list"
+          >
 
             <li>
-              Fast Feed checks for new versions inside the app.
-            </li>
-
-            <li>
-              When an update is available, the app shows an update popup.
-            </li>
-
-            <li>
-              Small updates are downloaded and prepared by Fast Feed itself.
-            </li>
-
-            <li>
-              You only need to confirm the final Android update installation.
+              Checking whether Fast Feed is installed…
             </li>
 
           </ul>
@@ -1885,20 +1916,40 @@
 
 
     <!-- =====================================================
-         UPDATES
+         APP STATUS / UPDATE
          ===================================================== -->
 
     <section class="bottom-download">
 
       <div class="container">
 
-        <h2>
-          Already have Fast Feed?
+        <h2 id="bottomAppTitle">
+          Fast Feed for Android
         </h2>
 
-        <p>
-          Open the app normally. Fast Feed will let you know when an update is available.
+        <p id="bottomAppText">
+          Checking this device…
         </p>
+
+        <a
+          id="bottomAppAction"
+          class="download-button detecting"
+          href="#"
+          aria-disabled="true"
+        >
+
+          <span
+            id="bottomAppIcon"
+            class="material-icons-round"
+          >
+            hourglass_top
+          </span>
+
+          <span id="bottomAppLabel">
+            Checking Fast Feed…
+          </span>
+
+        </a>
 
       </div>
 
@@ -2569,8 +2620,515 @@
 
 
     /* =======================================================
-       VERSION.JSON
+       FAST FEED APP + UPDATE STATUS
        ======================================================= */
+
+    const FAST_FEED_PACKAGE =
+      "com.tsvishnu.fastfeed";
+
+    const FAST_FEED_SCHEME =
+      "fastfeed://open";
+
+    const FALLBACK_DOWNLOAD =
+      "https://github.com/tsvishnunarayanan/Fast-Feed-Releases/releases/latest/download/FastFeed.apk";
+
+    const isAndroid =
+      /Android/i.test(
+        navigator.userAgent
+      );
+
+    let latestVersion = "";
+    let downloadUrl =
+      FALLBACK_DOWNLOAD;
+
+
+    function cleanVersion(value) {
+      return String(value || "")
+        .replace(/^v/i, "")
+        .trim();
+    }
+
+
+    function compareVersions(a, b) {
+
+      const left =
+        cleanVersion(a)
+          .split(".")
+          .map(
+            part =>
+              parseInt(
+                part.match(/^\d+/)?.[0] || "0",
+                10
+              )
+          );
+
+      const right =
+        cleanVersion(b)
+          .split(".")
+          .map(
+            part =>
+              parseInt(
+                part.match(/^\d+/)?.[0] || "0",
+                10
+              )
+          );
+
+      const length =
+        Math.max(
+          left.length,
+          right.length
+        );
+
+      for (let i = 0; i < length; i++) {
+        const l = left[i] || 0;
+        const r = right[i] || 0;
+
+        if (l > r) return 1;
+        if (l < r) return -1;
+      }
+
+      return 0;
+    }
+
+
+    function setAction(
+      buttonId,
+      iconId,
+      labelId,
+      mode
+    ) {
+
+      const button =
+        document.getElementById(
+          buttonId
+        );
+
+      const icon =
+        document.getElementById(
+          iconId
+        );
+
+      const label =
+        document.getElementById(
+          labelId
+        );
+
+      button.classList.remove(
+        "detecting",
+        "update-ready",
+        "open-app"
+      );
+
+      button.removeAttribute(
+        "aria-disabled"
+      );
+
+      button.dataset.mode =
+        mode;
+
+      if (mode === "update") {
+        icon.textContent =
+          "system_update_alt";
+        label.textContent =
+          "Open Fast Feed to update";
+        button.href = "#";
+        button.classList.add(
+          "update-ready"
+        );
+      }
+      else if (mode === "open") {
+        icon.textContent =
+          "open_in_new";
+        label.textContent =
+          "Open Fast Feed";
+        button.href = "#";
+        button.classList.add(
+          "open-app"
+        );
+      }
+      else {
+        icon.textContent =
+          "download";
+        label.textContent =
+          "Download for Android";
+        button.href =
+          downloadUrl;
+      }
+    }
+
+
+    function updateBothActions(mode) {
+      setAction(
+        "heroDownload",
+        "heroActionIcon",
+        "heroActionText",
+        mode
+      );
+
+      setAction(
+        "bottomAppAction",
+        "bottomAppIcon",
+        "bottomAppLabel",
+        mode
+      );
+    }
+
+
+    function setCard(
+      title,
+      rows
+    ) {
+
+      document
+        .getElementById(
+          "appStatusCardTitle"
+        )
+        .textContent =
+          title;
+
+      const list =
+        document.getElementById(
+          "appStatusCardList"
+        );
+
+      list.innerHTML =
+        "";
+
+      rows.forEach(
+        text => {
+          const item =
+            document.createElement(
+              "li"
+            );
+          item.textContent =
+            text;
+          list.appendChild(
+            item
+          );
+        }
+      );
+    }
+
+
+    function showInstalled(
+      installedVersion
+    ) {
+
+      const installed =
+        cleanVersion(
+          installedVersion
+        );
+
+      const hasUpdate =
+        installed
+        &&
+        latestVersion
+        &&
+        compareVersions(
+          installed,
+          latestVersion
+        ) < 0;
+
+      if (hasUpdate) {
+
+        updateBothActions(
+          "update"
+        );
+
+        document
+          .getElementById(
+            "heroAppStatus"
+          )
+          .innerHTML =
+            `<strong>Update available</strong> · v${installed} → v${latestVersion}`;
+
+        document
+          .getElementById(
+            "bottomAppTitle"
+          )
+          .textContent =
+            "A Fast Feed update is available";
+
+        document
+          .getElementById(
+            "bottomAppText"
+          )
+          .textContent =
+            `Installed v${installed} · Latest v${latestVersion}`;
+
+        setCard(
+          "Update available",
+          [
+            `Installed version: v${installed}`,
+            `Latest version: v${latestVersion}`,
+            "Open Fast Feed to download the small update inside the app.",
+            "Android will ask you to confirm the final installation."
+          ]
+        );
+
+      }
+      else {
+
+        updateBothActions(
+          "open"
+        );
+
+        document
+          .getElementById(
+            "heroAppStatus"
+          )
+          .innerHTML =
+            installed
+              ? `<strong>Fast Feed v${installed}</strong> is installed and up to date.`
+              : `<strong>Fast Feed is installed</strong> on this device.`;
+
+        document
+          .getElementById(
+            "bottomAppTitle"
+          )
+          .textContent =
+            "Fast Feed is installed";
+
+        document
+          .getElementById(
+            "bottomAppText"
+          )
+          .textContent =
+            installed
+              ? `You are using v${installed}.`
+              : "Open Fast Feed normally.";
+
+        setCard(
+          "Fast Feed is up to date",
+          [
+            installed
+              ? `Installed version: v${installed}`
+              : "Fast Feed is installed.",
+            latestVersion
+              ? `Latest version: v${latestVersion}`
+              : "No newer version is currently listed.",
+            "Future updates will appear both here and inside Fast Feed."
+          ]
+        );
+
+      }
+    }
+
+
+    function showNotInstalled() {
+
+      updateBothActions(
+        "download"
+      );
+
+      document
+        .getElementById(
+          "heroAppStatus"
+        )
+        .textContent =
+          isAndroid
+            ? "Fast Feed is not installed on this device."
+            : "Android app · latest release";
+
+      document
+        .getElementById(
+          "bottomAppTitle"
+        )
+        .textContent =
+          "Get Fast Feed";
+
+      document
+        .getElementById(
+          "bottomAppText"
+        )
+        .textContent =
+          "Install the latest Android release.";
+
+      setCard(
+        "Install Fast Feed",
+        [
+          "Download FastFeed.apk.",
+          "Allow installation from your browser if Android asks.",
+          "Install and open Fast Feed.",
+          "Future updates will be handled inside the app."
+        ]
+      );
+
+    }
+
+
+    function openFastFeed() {
+
+      let hidden =
+        false;
+
+      const onVisibility =
+        () => {
+          if (
+            document.visibilityState
+            === "hidden"
+          ) {
+            hidden = true;
+          }
+        };
+
+      document.addEventListener(
+        "visibilitychange",
+        onVisibility
+      );
+
+      window.location.href =
+        FAST_FEED_SCHEME;
+
+      window.setTimeout(
+        () => {
+
+          document.removeEventListener(
+            "visibilitychange",
+            onVisibility
+          );
+
+          /*
+            On browsers without getInstalledRelatedApps(),
+            if Fast Feed did not open, fall back to the
+            normal download option.
+          */
+          if (
+            !hidden
+            &&
+            document.visibilityState
+              === "visible"
+          ) {
+            showNotInstalled();
+          }
+
+        },
+        1400
+      );
+    }
+
+
+    function attachAction(id) {
+
+      const button =
+        document.getElementById(id);
+
+      button.addEventListener(
+        "click",
+        event => {
+
+          const mode =
+            button.dataset.mode;
+
+          if (
+            mode === "open"
+            ||
+            mode === "update"
+          ) {
+            event.preventDefault();
+            openFastFeed();
+          }
+
+        }
+      );
+
+    }
+
+
+    attachAction(
+      "heroDownload"
+    );
+
+    attachAction(
+      "bottomAppAction"
+    );
+
+
+    async function detectFastFeed() {
+
+      if (!isAndroid) {
+        showNotInstalled();
+        return;
+      }
+
+      if (
+        "getInstalledRelatedApps"
+        in navigator
+      ) {
+
+        try {
+
+          const apps =
+            await navigator
+              .getInstalledRelatedApps();
+
+          const fastFeed =
+            apps.find(
+              app =>
+                app.id
+                === FAST_FEED_PACKAGE
+            );
+
+          if (fastFeed) {
+            showInstalled(
+              fastFeed.version || ""
+            );
+            return;
+          }
+
+          showNotInstalled();
+          return;
+
+        }
+        catch (_) {
+          /*
+            Fall through to the open-app probe.
+          */
+        }
+
+      }
+
+      /*
+        Unsupported Android browser: try opening the
+        custom Fast Feed scheme first. If it does not
+        open, the page changes to Download for Android.
+      */
+      updateBothActions(
+        "open"
+      );
+
+      document
+        .getElementById(
+          "heroAppStatus"
+        )
+        .textContent =
+          "Already installed? Open Fast Feed. If not, the download option will appear.";
+
+      document
+        .getElementById(
+          "bottomAppTitle"
+        )
+        .textContent =
+          "Open Fast Feed";
+
+      document
+        .getElementById(
+          "bottomAppText"
+        )
+        .textContent =
+          "If Fast Feed is not installed, you can download it here.";
+
+      setCard(
+        "Fast Feed on this device",
+        [
+          "This browser cannot directly read the installed app version.",
+          "Open Fast Feed to check for updates.",
+          "If Fast Feed is not installed, the site will offer the APK download."
+        ]
+      );
+
+    }
+
 
     async function loadVersionInfo() {
 
@@ -2578,118 +3136,82 @@
 
         const response =
           await fetch(
-
             "version.json?t=" +
             Date.now(),
-
             {
               cache: "no-store"
             }
-
           );
 
+        if (response.ok) {
 
-        if (!response.ok) {
-          return;
-        }
+          const data =
+            await response.json();
 
+          if (data.version) {
 
-        const data =
-          await response.json();
-
-
-        if (data.version) {
-
-          const versionText =
-            document.getElementById(
-              "versionText"
-            );
-
-
-          versionText.textContent =
-            "v" +
-            String(data.version)
-              .replace(/^v/i, "");
-
-
-          versionText.classList.remove(
-            "version-shimmer"
-          );
-
-          void versionText.offsetWidth;
-
-          versionText.classList.add(
-            "version-shimmer"
-          );
-
-
-          window.setTimeout(
-            () => {
-              versionText.classList.remove(
-                "version-shimmer"
-              );
-            },
-            940
-          );
-
-        }
-
-
-        if (data.downloadUrl) {
-
-          document
-            .getElementById("heroDownload")
-            .href =
-              data.downloadUrl;
-
-        }
-
-
-        if (
-          Array.isArray(data.notes)
-          &&
-          data.notes.length > 0
-        ) {
-
-          const releaseNotes =
-            document.getElementById(
-              "releaseNotes"
-            );
-
-
-          releaseNotes.innerHTML = "";
-
-
-          data.notes.forEach(
-            note => {
-
-              const item =
-                document.createElement("li");
-
-
-              item.textContent =
-                String(note);
-
-
-              releaseNotes.appendChild(
-                item
+            latestVersion =
+              cleanVersion(
+                data.version
               );
 
-            }
-          );
+            document
+              .getElementById(
+                "versionText"
+              )
+              .textContent =
+                "v" +
+                latestVersion;
+          }
+
+          if (data.downloadUrl) {
+            downloadUrl =
+              String(
+                data.downloadUrl
+              );
+          }
+
+          if (
+            Array.isArray(data.notes)
+            &&
+            data.notes.length > 0
+          ) {
+
+            const releaseNotes =
+              document.getElementById(
+                "releaseNotes"
+              );
+
+            releaseNotes.innerHTML =
+              "";
+
+            data.notes.forEach(
+              note => {
+                const item =
+                  document.createElement(
+                    "li"
+                  );
+                item.textContent =
+                  String(note);
+                releaseNotes.appendChild(
+                  item
+                );
+              }
+            );
+
+          }
 
         }
 
       }
-
       catch (_) {
-
         /*
-          The website remains completely usable
-          if version.json temporarily fails.
+          The website remains usable if version.json
+          is temporarily unavailable.
         */
-
       }
+
+      await detectFastFeed();
 
     }
 
