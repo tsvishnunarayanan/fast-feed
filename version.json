@@ -1,17 +1,15 @@
 {
-  "version": "1.4.4",
+  "version": "1.4.5",
   "downloadUrl": "https://github.com/tsvishnunarayanan/Fast-Feed-Releases/releases/latest/download/FastFeed.apk",
   "fullSizeBytes": 65410458,
   "notes": [
-    "Added Website to Settings",
-    "Future update checks now use the new Fast Feed website",
-    "Simplified the update prompt"
+    "Version bump to v1.4.5"
   ],
   "patches": [
     {
-      "from": "1.4.3",
-      "url": "https://github.com/tsvishnunarayanan/Fast-Feed-Releases/releases/download/v1.4.4/FastFeed-1.4.3-to-1.4.4.patch",
-      "sizeBytes": 2324906
+      "from": "1.4.4",
+      "url": "https://github.com/tsvishnunarayanan/Fast-Feed-Releases/releases/download/v1.4.5/FastFeed-1.4.4-to-1.4.5.patch",
+      "sizeBytes": 120708
     }
   ]
 }
