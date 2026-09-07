@@ -1,15 +1,15 @@
 {
-  "version": "1.4.5",
+  "version": "1.4.6",
   "downloadUrl": "https://github.com/tsvishnunarayanan/Fast-Feed-Releases/releases/latest/download/FastFeed.apk",
   "fullSizeBytes": 65410458,
   "notes": [
-    "Version bump to v1.4.5"
+    "Improved Home screen spacing on taller phones"
   ],
   "patches": [
     {
-      "from": "1.4.4",
-      "url": "https://github.com/tsvishnunarayanan/Fast-Feed-Releases/releases/download/v1.4.5/FastFeed-1.4.4-to-1.4.5.patch",
-      "sizeBytes": 120708
+      "from": "1.4.5",
+      "url": "https://github.com/tsvishnunarayanan/Fast-Feed-Releases/releases/download/v1.4.6/FastFeed-1.4.5-to-1.4.6.patch",
+      "sizeBytes": 874770
     }
   ]
 }
