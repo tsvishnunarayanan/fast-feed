@@ -1,15 +1,17 @@
 {
-  "version": "1.4.6",
+  "version": "1.4.7",
   "downloadUrl": "https://github.com/tsvishnunarayanan/Fast-Feed-Releases/releases/latest/download/FastFeed.apk",
   "fullSizeBytes": 65410458,
   "notes": [
-    "Improved Home screen spacing on taller phones"
+    "Fixed new mark alerts for newly published Series reports.",
+    "Added a single notification when a fresh report becomes available.",
+    "Improved notification handling to prevent repeated alerts."
   ],
   "patches": [
     {
-      "from": "1.4.5",
-      "url": "https://github.com/tsvishnunarayanan/Fast-Feed-Releases/releases/download/v1.4.6/FastFeed-1.4.5-to-1.4.6.patch",
-      "sizeBytes": 874770
+      "from": "1.4.6",
+      "url": "https://github.com/tsvishnunarayanan/Fast-Feed-Releases/releases/download/v1.4.7/FastFeed-1.4.6-to-1.4.7.patch",
+      "sizeBytes": 1828274
     }
   ]
 }
